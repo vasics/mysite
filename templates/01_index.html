@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+      <div id="index_container">
+            <div id="index_head">
+                플래쉬
+            </div>
+            <div id="index_middle">
+                <article>
+                    투자정보
+                </article>
+                <article id=side_border>
+                    EVENT
+                </article>
+                <article>
+                    <a href="{% url 'knowledge040101' %}">금융지식</a>
+                </article>
+            </div>
+            <div id="index_end">
+               <article id="right_border">
+                   상담후기
+               </article>
+               <article>
+                   상담신청
+               </article>
+            </div>
+        </div>
+
+{% endblock content %}

@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    고객센터
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'customer070101' %}">1. 공지사항</a></div>
+                    <div><a href="{% url 'customer070201' %}">2. 새소식</a></div>
+                    <div><a href="{% url 'customer070301' %}">3. 이벤트</a></div>    
+                    <div><a href="{% url 'customer070401' %}">4. Q&A</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle2">
+                    공지사항
+                </div>
+                <div>
+                    <div class="list_box">
+                        <a href="/customer/03/?page={{ page }}">
+                        목록</a>
+                    </div>
+                </div>
+                <table class="list_detail">
+                    <tr>
+                        <td class="ld_title">
+                            <h1>{{specific_board01.title }}</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ld_subtitle">
+                            작성자 : {{ author.username }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;조회수 : {{ specific_board01.hits }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ld_contents2">
+                           {{ specific_board01.content | linebreaks }}
+                        </td>
+                    </tr>
+                </table>
+                
+                {% if username %}
+                <div class="edit_btn">
+                    <table>
+                        <td class="edit_box">
+                            <a href="/customer/03/{{ specific_board01.id }}/customer03_edit">수정</a>
+                        </td>
+                        <td class="edit_box">
+                            <a href="/customer/03/{{ specific_board01.id }}/customer03_deleteconfirm">삭제</a>
+                        </td>
+                    </table> 
+                </div>
+                {% endif %} 
+                    
+                <div class="list_show">
+                    <div class=border-bottom-1px>
+                        {% if prev %}
+                            이전글 / <a href="/customer/03/{{ prev.id }}/">{{ prev.title }}</a>
+                        {% else %}
+                            이전글 / 없음
+                        {% endif %}
+                    </div>
+                    <div>
+                        {% if next %}
+                            다음글 / <a href="/customer/03/{{ next.id }}/">{{ next.title }}</a>
+                        {% else %}
+                            다음글 / 없음
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    {% endblock content %}

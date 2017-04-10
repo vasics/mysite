@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+    {% load static %}
+        {% block content %}
+
+            <div class="basic_cont">
+                <div id="left_aside">
+                    <div id="left_nav">
+                        <a href="{% url 'login_form' %}">로그인</a>
+                    </div>
+                </div>
+                <div id="right_aside">
+                    <div class="member_choice">
+                        <div id="ma-first">
+                           <div>
+                               ID등록
+                           </div>
+                        </div>
+                        <div id="ma-second">
+                            <div class="ma2-content">
+                                <div id="ma2c-1">
+                                       이용자 ID 등록
+                                </div>
+                                <div id="ma2c-2">
+                                       현명한 내자산 관리방법<br>
+                                       IFP에 오신 것을<br>
+                                       환영합니다.
+                                </div>
+                            </div>
+                            <div class="ma2-content">
+                                <img src="{% static 'img/logo.gif' %}" alt="그림" id="ma2c-3">
+                            </div>
+                        </div>
+                        <div id="ma-margin">
+
+                        </div>
+                        <div id="ma-third">
+                            <div class="ma3-content">
+                                <div class="ma3c-block1">
+                                    <div class="ma3cb-1">
+                                        정회원
+                                    </div>
+                                    <div class="ma3cb-2">
+                                        담당 관리사의 안내에 따라 정회원 ID<br>
+                                        등록 후 정회원 서비스를 이용하실 수<br>
+                                        있습니다.<br>
+                                    </div>
+                                </div>
+                                <div class="ma3c-block2">
+                                    <div>
+                                        <a href="{% url 'terms' %}">
+                                            >
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ma3-content">
+                                <div class="ma3c-block1">
+                                    <div class="ma3cb-1">
+                                        준회원
+                                    </div>
+                                    <div class="ma3cb-2">
+                                        준회원으로 가입을 하시면 금융지식,<br>
+                                        Q&A 등 서비스를 제공받으실 수<br>
+                                        있습니다.
+                                    </div>
+                                </div>
+                                <div class="ma3c-block2">
+                                    <div>
+                                        <a href="{% url 'terms' %}">
+                                        >
+                                        </a>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+{% endblock content %}

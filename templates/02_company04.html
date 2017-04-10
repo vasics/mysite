@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+    {% load static %}
+        {% block content %}
+
+            <div class="basic_cont">
+                <div id="left_aside">
+                    <div id="left_nav_2">
+                        〈회사소개〉
+                    </div>
+                    <div id="left-nav-bottom">
+                      <div><a href="{% url 'company0201' %}">1. 대표 인사말</a></div>
+                      <div><a href="{% url 'company0202' %}">2. 회사 연혁</a></div>
+                      <div><a href="{% url 'company0203' %}">3. 가치관</a></div>
+                      <div class="lnb-borderbox"><a href="{% url 'company0204' %}">4. 조직도</a></div>
+                    </div>
+                </div>
+                <div id="right_aside">
+                    <div id="org-r-first">
+                        조직도
+                    </div>
+                    <div id="org-r-second">
+                        :Organization Chart
+                    </div>
+                    <div id="org-r-third">
+                        <img src="{% static 'img/organization.jpg' %}" alt="조직도">
+                    </div>
+                    <div id="org-r-fourth">
+                        :IFP 부서별 연락처 및 이메일
+                    </div>
+                    <table id="org-r-tb">
+                        <thead>
+                            <tr>
+                                <th>부서</th>
+                                <th>연락처</th>
+                                <th>이메일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>경영관리팀</td>
+                                <td>02-XXXX-XXXX</td>
+                                <td>IFP@IFP.CO.KR</td>
+                            </tr>
+                            <tr>
+                                <td>영업기획팀</td>
+                                <td>02-XXXX-XXXX</td>
+                                <td>IFP@IFP.CO.KR</td>
+                            </tr>
+                            <tr>
+                                <td>마케팅팀</td>
+                                <td>02-XXXX-XXXX</td>
+                                <td>IFP@IFP.CO.KR</td>
+                            </tr>
+                            <tr>
+                                <td>필드지원실</td>
+                                <td>02-XXXX-XXXX</td>
+                                <td>IFP@IFP.CO.KR</td>
+                            </tr>
+                            <tr>
+                                <td>투자자문위원회</td>
+                                <td>02-XXXX-XXXX</td>
+                                <td>IFP@IFP.CO.KR</td>
+                            </tr>
+                            <tr>
+                                <td>러닝센터</td>
+                                <td>02-XXXX-XXXX</td>
+                                <td>IFP@IFP.CO.KR</td>
+                            </tr>
+                            <tr>
+                                <td>IFP연구소</td>
+                                <td>02-XXXX-XXXX</td>
+                                <td>IFP@IFP.CO.KR</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        {% endblock content %}

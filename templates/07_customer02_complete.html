@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    고객센터
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'customer070101' %}">1. 공지사항</a></div>
+                    <div><a href="{% url 'customer070201' %}">2. 새소식</a></div>
+                    <div><a href="{% url 'customer070301' %}">3. 이벤트</a></div>
+                    <div><a href="{% url 'customer070401' %}">4. Q&A</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div class="complete_box">
+                    글이 저장되었습니다.
+                </div>
+                <div>
+                    <div class="list_box">
+                        <a href="{% url 'customer02_detail' pk %}">
+                        확인</a>
+                    </div>            
+                </div>
+            </div>
+
+        </div>
+
+    {% endblock content %}

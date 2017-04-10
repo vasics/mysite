@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav_2">
+                    〈회사소개〉
+                </div>
+                <div id="left-nav-bottom">
+                  <div><a href="{% url 'company0201' %}">1. 대표 인사말</a></div>
+                  <div><a href="{% url 'company0202' %}">2. 회사 연혁</a></div>
+                  <div><a href="{% url 'company0203' %}">3. 가치관</a></div>
+                  <div><a href="{% url 'company0204' %}">4. 조직도</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle">
+                    연혁
+                </div>
+                <div id="history-r-second">
+                    IFP는 고객 여러분의 보다 나은 내일을 위해<br>
+                    끊임없는 연구와 노력을 하고 있습니다.
+                </div>
+                <table id="history-r-tb">
+                    <tbody>
+                        <tr>
+                            <td id="hrtb-1" colspan="3">
+                            ◁ &nbsp;2016&nbsp; ▷</td>
+                        </tr>
+                        <tr>
+                            <td id="hrtb-left" rowspan="5">2016</td>
+                            <td class="hrtb-month">9월</td>
+                            <td class="hrtb-m2">
+                               aaaaaaaaaaaa<br>
+                                bbbbbbbbbbbb<br>
+                                cccccccccccc
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="hrtb-month">8월</td>
+                            <td class="hrtb-m2">
+                               aaaaaaaaaaaa<br>
+                                bbbbbbbbbbbb<br>
+                                cccccccccccc
+                            </td>
+                        </tr><tr>
+                            <td class="hrtb-month">7월</td>
+                            <td class="hrtb-m2">
+                               aaaaaaaaaaaa<br>
+                                bbbbbbbbbbbb<br>
+                                cccccccccccc
+                            </td>
+                        </tr><tr>
+                            <td class="hrtb-month">1월</td>
+                            <td class="hrtb-m2">
+                               aaaaaaaaaaaa<br>
+                                bbbbbbbbbbbb<br>
+                                cccccccccccc
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+
+            </div>
+        </div>
+
+    {% endblock content %}

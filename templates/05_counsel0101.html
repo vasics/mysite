@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    상담 안내
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'counsel050101' %}">1. 상담후기</a></div>
+                    <div><a href="{% url 'counsel050201' %}">2. 재무상담신청</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle">
+                    상담후기
+                </div>
+                <div>
+                    <table class="counsel_table">
+                        <tr>
+                            <td>사진</td>
+                            <td>내용 / 조회수 / 등록일</td>
+                        </tr>
+                        <tr>
+                            <td>사진</td>
+                            <td>내용 / 조회수 / 등록일</td>
+                        </tr>
+                        <tr>
+                            <td>사진</td>
+                            <td>내용 / 조회수 / 등록일</td>
+                        </tr>
+                        <tr>
+                            <td>사진</td>
+                            <td>내용 / 조회수 / 등록일</td>
+                        </tr>
+                        <tr>
+                            <td>사진</td>
+                            <td>내용 / 조회수 / 등록일</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <table class="search_table">
+                        <tbody>
+                        <td class="search_box">
+                            <table class="search_table2">
+                                <td>
+                                    <input type="search" id="search_input">   
+                                </td>
+                                <td> 
+                                    <input type="button" value="검색" id="search_btn">
+                                </td>
+                            </table>
+                        </td>
+                        <td class="question_box">
+                            <div>
+                                <a href="{% url 'board01_write' %}">글올리기</a>
+                            </div>
+                        </td>
+                        <tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    {% endblock content %}

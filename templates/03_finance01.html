@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'finance0301' %}">1. 재무설계</a></div>
+                    <div id="lnb-1-1">
+                        <div><a href="{% url 'finance0301' %}">: 재무설계란</a></div>
+                        <div><a href="{% url 'finance0302' %}">: 재무설계절차</a></div>
+                        <div><a href="{% url 'finance030301' %}">: 재무설계분야</a></div>
+                    </div>
+                    <div><a href="{% url 'finance030401' %}">2. 상담효과</a></div>
+                    <div><a href="{% url 'finance030501' %}">3. 진단체크</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle2">
+                    재무설계란
+                </div>
+                <div id="fd-r-second">
+                    <table id="fd-r-tb">
+                        <tr>
+                            <td id="frtb-1">
+                                목표자금을 설정을 하고 재무상태와 현금흐름을 파악 후 목표자금에 맞게 자산을 배분하고<br> 투자를 실행하는 일련의 과정
+                            </td>
+                            <td id="frtb-1-2" rowspan="2">
+                                그림
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="frtb-2">
+                                정기적인 모니터링을 통해 목표, 배분, 결과를 지속적으로 점검하며<br>
+                                변화는 환경에 효과적으로 대응하고 달성에 차질이 없도록 이뤄갑니다.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <table id="fd-r-tb2">
+                        <tbody>
+                            <tr>
+                                <td id="frtb2-1">
+                                    그림
+                                </td>
+                                <td class="padding-left_3px">
+                                    재무설계 상담료 비용<br>
+                                    > 서비스기간 : 상담료 1회 지불 -> 1개월 서비스 제공<br>
+
+                                    > 상담료 비용 책정 기준 -> ClassA (33000) / ClassB (5500) / VIP (협의)<br>
+                                    (부가세 포함 금액)
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    {% endblock content %}

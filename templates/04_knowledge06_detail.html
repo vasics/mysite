@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="basic_cont">
+    <div id="left_aside">
+        <div id="left_nav">
+
+        </div>
+        <div id="left-nav-bottom">
+            <div><a href="{% url 'knowledge040101' %}">1. 은행</a></div>
+            <div><a href="{% url 'knowledge040201' %}">2. 증권</a></div>
+            <div><a href="{% url 'knowledge040301' %}">3. 보험</a></div>
+            <div><a href="{% url 'knowledge040401' %}">4. 부동산</a></div>
+            <div><a href="{% url 'knowledge040501' %}">5. 세금</a></div>
+            <div><a href="{% url 'knowledge040601' %}">6. 궁금합니다.</a></div>
+        </div>
+    </div>
+    <div id="right_aside">
+
+        <div id="r-subtitle2">
+            궁금합니다.
+        </div>
+                 <div>
+                    <div class="list_box">
+                        <a href="/knowledge/06/?page={{ page }}">
+                        목록</a>
+                    </div>
+                </div>
+                <table class="list_detail">
+                    <tr>
+                        <td class="ld_title">
+                   <h1>{{specific_board01.title }}</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ld_subtitle">
+                            작성자 : {{ specific_board01.writer }} 조회수 : {{ specific_board01.hits }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ld_contents2">
+                   {{ specific_board01.content | linebreaks }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ld_contents2">
+                        {% if r_form.reply %}
+                        {{ r_form.reply | linebreaks }}
+                        {% else %}
+                        아직 답변이 없습니다.
+                        {% endif %}
+                        </td>
+                    </tr>
+
+                </table>
+                {% if username %}
+                <div class="edit_btn">
+                  <table>
+                    <td class="edit_box">
+                      <a href="/knowledge/06/{{ pk }}/board06_answer">답변작성</a>
+                    </td>
+                    <td class="edit_box">
+                      <a href="/knowledge/06/{{ pk }}/board06_answeredit">답변수정</a>
+                    </td>
+                    <td class="edit_box">
+                      <a href="/knowledge/06/{{ pk }}/board06_answerdeletecon">답변삭제</a>
+                    </td>
+                  </table>
+                </div>
+                {% endif %}
+                <div class="list_show">
+                    <div class=border-bottom-1px>
+                    {% if prev %}
+                        이전글 / <a href="/knowledge/06/{{ prev.id }}/">{{ prev.title }}</a>
+                    {% else %}
+                        이전글 / 없음
+                    {% endif %}
+                    </div>
+                    <div>
+                    {% if next %}
+                        다음글 / <a href="/knowledge/06/{{ next.id }}/">{{ next.title }}</a>
+                    {% else %}
+                        다음글 / 없음
+                    {% endif %}
+
+                    </div>
+                </div>
+        <div class="edit_btn">
+            <table>                  
+                <td class="edit_box">
+                    <a href="/knowledge/06/{{ pk }}/board06_editconfirm">수정</a>
+                </td>
+                <td class="edit_box">   
+                    <a href="/knowledge/06/{{ pk }}/board06_deleteconfirm1">삭제</a>
+                </td> 
+            </table> 
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

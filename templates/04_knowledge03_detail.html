@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+<div class="basic_cont">
+    <div id="left_aside">
+        <div id="left_nav">
+
+        </div>
+        <div id="left-nav-bottom">
+            <div><a href="{% url 'knowledge040101' %}">1. 은행</a></div>
+            <div><a href="{% url 'knowledge040201' %}">2. 증권</a></div>
+            <div><a href="{% url 'knowledge040301' %}">3. 보험</a></div>
+            <div><a href="{% url 'knowledge040401' %}">4. 부동산</a></div>
+            <div><a href="{% url 'knowledge040501' %}">5. 세금</a></div>
+            <div><a href="{% url 'knowledge040601' %}">6. 궁금합니다.</a></div>
+        </div>
+    </div>
+    <div id="right_aside">
+
+        <div id="r-subtitle2">
+            보험
+        </div>
+        <div>
+            <div class="list_box">
+                <a href="/knowledge/03/?page={{ page }}">
+                목록</a>
+            </div>
+        </div>
+        <table class="list_detail">
+            <tr>
+                <td class="ld_title">
+                   <h1>{{specific_board03.title }}</h1>
+                </td>
+            </tr>
+            <tr>
+                <td class="ld_contents">
+                   {{ specific_board03.content | linebreaks }}
+                </td>
+            </tr>       
+
+        </table>
+        {% if username %}
+        <div class="edit_btn">
+            <table>                  
+                <td class="edit_box">
+                    <a href="/knowledge/03/{{ id }}/board03_edit">수정</a>
+                </td>
+                <td class="edit_box">   
+                    <a href="/knowledge/03/{{ id }}/board03_deleteconfirm">삭제</a>
+                </td> 
+            </table> 
+        </div>
+        {% endif %}
+    </div>              
+</div>
+
+    {% endblock content %}

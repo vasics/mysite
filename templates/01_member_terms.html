@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+           <div id="left_aside">
+                <div id="left_nav">
+                    <a href="{% url 'login_form' %}">로그인</a>
+                </div>
+                <div>
+                    
+                </div>
+            </div>          
+        
+            <div id="right_aside">
+            <div id="r-subtitle2">
+                    ID 등록
+                </div>
+                <div>
+                    준회원
+                </div>
+                <div class="member_process m1">
+                    <ol>
+                        <li>
+                            <a href="{% url 'terms' %}">
+                                <span class="blind">약관동의</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register' %}">
+                                <span class="blind">이용자ID등록</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'success' %}">
+                                <span class="blind">가입완료</span>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+                <div class="cs_wrap">
+                    <div class="cs_contents">
+                        <div class="cs_section">
+                            <div class="cs_scroll_area">
+                                <strong class="title">1. 개인(신용)정보 수집, 이용 동의</strong>
+                                <div class="cs_scroll">
+                                    개인정보 수집 및 이용 동의서(고객용)
+                                        <div>
+                                            <p>IFP 주식회사는 '개인정보 보호법' 및 '신용정보의 이용 및 보호에 관한 법률'에 따라 준고객 가입을 위해 필요한 개인정보의 수집 이용에 대한 동의를 구합니다.
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam rem saepe deserunt, at sequi laboriosam vitae veniam! Error nulla temporibus, quod dignissimos delectus ab veritatis magnam maiores eaque. Fugiat sit impedit ipsam. Nulla omnis expedita provident, consequatur reprehenderit quia voluptatum facilis aliquid accusamus quidem inventore voluptatibus velit, corrupti officia harum earum iusto quo est vitae eum sequi similique eligendi repellendus sunt. Quae a, aperiam nulla magni perspiciatis atque nostrum delectus dolorem cupiditate distinctio numquam vero officia assumenda, quidem aliquid sequi quos nihil incidunt corporis optio. Molestias corporis laborum modi non assumenda perspiciatis, blanditiis reiciendis inventore incidunt dignissimos labore aperiam, sequi!</p>
+                                        </div> 
+                                </div>
+                            </div>   
+                            
+                        </div>
+                    </div>
+                </div>                       
+                    
+            </div>    
+        </div>
+
+    {% endblock content %}

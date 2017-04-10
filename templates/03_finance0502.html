@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'finance0301' %}">1. 재무설계</a></div>
+                    <div id="lnb-1-1">
+                    <div><a href="{% url 'finance0301' %}">: 재무설계란</a></div>
+                    <div><a href="{% url 'finance0302' %}">: 재무설계절차</a></div>
+                    <div><a href="{% url 'finance030301' %}">: 재무설계분야</a></div>
+                    </div>
+                    <div><a href="{% url 'finance030401' %}">2. 상담효과</a></div>
+                    <div><a href="{% url 'finance030501' %}">3. 진단체크</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle2">
+                    진단체크
+                </div>
+                <div id="fa-r-tb8">
+
+                </div>
+
+            </div>
+        </div>
+
+    {% endblock content %}

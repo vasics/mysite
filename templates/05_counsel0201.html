@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+    {% block content %}
+       
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    상담 안내
+                </div>
+                <div id="left-nav-bottom">
+                    <div class="lnb-borderbox"><a href="{% url 'counsel050101' %}">1. 상담후기</a></div>
+                    <div><a href="{% url 'counsel050201' %}">2. 재무상담신청</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle">
+                    상담 신청 작성란
+                </div>
+                <div>
+                    <form action="">   
+                        <table class="counsel_table apply">
+                            <tbody>   
+                                <tr>
+                                    <td class="cta_sub">*이름</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">*출생년도</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">*연락처</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">*이메일</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">*거주지역</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">*직업</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">상담 분야</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">연락가능시간</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">상담 희망 FP</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="cta_sub">문의내용</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="agree_title">
+                            개인정보보호를 위한 동의사항
+                        </div>
+                        <div class="agree_box">
+                            동의내용
+                        </div>
+                        <div class="agree_question">
+                            <span>
+                                위 내용에 동의하십니까?    
+                            </span>
+                            <span>
+                                <input type="button" value="예">
+                            </span>
+                            <span>
+                                <input type="button" value="아니오">
+                            </span>                         
+                        </div>
+                        <div class="counsel_apply confirm">
+                            <div>
+                                <span>
+                                    <input type="submit" value="확인">
+                                </span>
+                                <span>
+                                    <input type="reset" value="취소">
+                                </span>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+   {% endblock content %}

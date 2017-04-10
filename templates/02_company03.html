@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+    {% load static %}
+        {% block content %}
+
+            <div class="basic_cont">
+                <div id="left_aside">
+                    <div id="left_nav_2">
+                        〈회사소개〉
+                    </div>
+                    <div id="left-nav-bottom">
+                      <div><a href="{% url 'company0201' %}">1. 대표 인사말</a></div>
+                      <div><a href="{% url 'company0202' %}">2. 회사 연혁</a></div>
+                      <div><a href="{% url 'company0203' %}">3. 가치관</a></div>
+                      <div><a href="{% url 'company0204' %}">4. 조직도</a></div>
+                    </div>
+                </div>
+                <div id="right_aside">
+                    <div id="r-subtitle">
+                        가치관
+                    </div>
+
+                    <table id="vision-r-tb">
+                        <tbody>
+                            <tr>
+                               <td class="vrtb-1" colspan="2">
+                                   ◑우리의 사명
+                               </td>
+                            </tr>
+                            <tr>
+                                <td class="vrtb-2" colspan="2">
+                                    우리는 고객의 꿈과 재정적 안전을 위하여 최선의 재무설계 서비스를 제공한다.<br>
+                                    영어로
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vrtb-1" colspan="2">
+                                    ※우리의 비전
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vrtb-2" colspan="2">
+                                    IFP는 고객과 FP로부터 가장 신뢰받는 위탁관리 전문회사가 된다.<br>
+                                   영어로
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vrtb-3">
+                                    ☆우리의 핵심가치
+                                </td>
+                                <td>
+                                    <img id="corevalue" src="{% static 'img/corevalue.gif' %}" alt="핵심가치">
+                                </td>
+                           </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        {% endblock content %}
+

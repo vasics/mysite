@@ -1,0 +1,141 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    <a href="{% url 'login_form' %}">로그인</a>
+                </div>
+                <div id="left-nav-bottom">
+                    
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle2">
+                    ID 등록
+                </div>
+                <div>
+                    준회원
+                </div>
+                <div class="member_process m2">
+                    <ol>
+                        <li>
+                            <a href="{% url 'terms' %}">
+                                <span class="blind">약관동의</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register' %}">
+                                <span class="blind">이용자ID등록</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'success' %}">
+                                <span class="blind">가입완료</span>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+                <div>
+                    <form action="{% url 'success' %}">
+                        <div class="table_box">
+                        <table>
+                           <colgroup>
+                               <col style="width:190px;">
+                               <col>
+                           </colgroup>
+                           <tbody>
+                            <tr>
+                                <th>* 이용자 ID</th>
+                                <td>
+                                    <span class="input_text">
+                                        <input type="text" style="width:150px" name="id">
+                                    </span>
+                                    <span class="btn_area id_overlap">
+                                        <a href="#">중복체크</a>
+                                    </span>
+                                    <span>*영문, 숫자 6~8자(대소문자 구분), 첫글자는 영문 입력</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>* 이용자 비밀번호</th>
+                                <td>
+                                   <span class="input_text">
+                                        <input type="password"
+                                        style="width:150px" name="password">
+                                    </span>
+                                    <span>*영문, 숫자 6(대소문자 구분)
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>* 이용자 비밀번호 확인</th>
+                                <td>
+                                    <span class="input_text">
+                                            <input type="password"
+                                            style="width:150px" name="password">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>* 이름</th>
+                                <td>
+                                    <span class="input_text">
+                                    <input type="text" style="width:150px" name="username">
+                                    </span>
+                                    <span>*(공백없이 입력)
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>* 생년월일</th>
+                                <td>
+                                    <span class="input_text">
+                                        <input type="date" style="width:150px" name="birthday">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>* 휴대폰</th>
+                                <td>
+                                    <span class="input_text">
+                                        <input type="tel" style="width:150px">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>* 이메일</th>
+                                <td>
+                                    <span class="input_text">
+                                    <input type="email" style="width:250px">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="txt_align center">
+                                <td colspan="2" class="border-bottom-1px">
+                                    <span>당사에서 제공하는 투자정보, 이벤트 및 공지사항 서비스를 받으시겠습니까?</span>
+                                    <span class="check_box">
+                                        <input type="checkbox">
+                                        <label>SMS</label>
+                                    </span>
+                                    <span class="check_box">
+                                        <input type="checkbox">
+                                        <label>이메일</label>
+                                    </span>
+                                </td>
+                            </tr>
+                           </tbody>
+                        </table>
+                        </div>
+                        <div class="btn_right">
+                            <input type="reset" value="취소">
+                            <input type="submit" value="확인">
+                        </div>
+                    </form>
+                </div>         
+                                                    
+            </div>
+        </div>
+
+{% endblock content %}

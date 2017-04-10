@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+    {% block content %}
+<div class="basic_cont">
+    <div id="right_aside">
+        <div class="complete_box">
+            로그아웃 하시겠습니까?    
+        </div>   
+        <div>
+        <form action="{% url 'logout_process' %}">
+        <div class="list_box">
+            <input type="submit" value="로그아웃">
+        </div>
+        </form>             
+        </div> 
+    </div>
+</div>
+        
+    {% endblock content %}

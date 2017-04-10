@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+<div class="basic_cont">
+    <div id="left_aside">
+        <div id="left_nav">
+
+        </div>
+        <div id="left-nav-bottom">
+            <div><a href="{% url 'knowledge040101' %}">1. 은행</a></div>
+            <div><a href="{% url 'knowledge040201' %}">2. 증권</a></div>
+            <div><a href="{% url 'knowledge040301' %}">3. 보험</a></div>
+            <div><a href="{% url 'knowledge040401' %}">4. 부동산</a></div>
+            <div><a href="{% url 'knowledge040501' %}">5. 세금</a></div>
+            <div><a href="{% url 'knowledge040601' %}">6. 궁금합니다.</a></div>
+        </div>
+    </div>
+    <div id="right_aside">
+        <div id="r-subtitle2">
+            증권
+        </div>
+        <table id="fa-r-tb9">
+            <tr class="fatb9-first">
+                <td id="fatb9-1-1">번호</td>
+                <td id="fatb9-1-2">제목</td>
+                <td id="fatb9-1-3">작성일</td>
+                <td id="fatb9-1-4">조회수</td>
+            </tr>   
+            <tbody>
+            {% for contacts in contacts %}
+                <tr>
+                    <td>{{ contacts.id }}</td>
+                    <td><a href = "{{ contacts.id }}">{{ contacts.title }}</a></td>
+                    <td>{{ contacts.created_at }}</td>
+                    <td>{{ contacts.hits }}</td>  
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination">
+            {% if contacts.has_other_pages %}
+                {% if contacts.has_previous %}
+                    <a href="?page={{ contacts.previous_page_number }}">&laquo;</a>
+                {% else %}
+                    &laquo;
+                {% endif %}
+                {% for i in contacts.paginator.page_range %}
+                    {% if contacts.number == i %}
+                        <b>{{ i }}</b>
+                    {% else %}
+                        <a href="?page={{ i }}">{{ i }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if contacts.has_next %}
+                    <a href="?page={{ contacts.next_page_number }}">&raquo;</a>
+                {% else %}
+                    &raquo;
+                {% endif %}
+            {% endif %}                
+        </div>
+        <div>
+            <table class="search_table">
+                <tbody>
+                    <td class="search_box">
+                        <table class="search_table2">
+                            <td>
+                                <input type="search" id="search_input">   
+                            </td>
+                            <td> 
+                                <input type="button" value="검색" id="search_btn">
+                            </td>
+                        </table>
+                    </td>
+                    {% if username %}
+                    <td class="question_box">
+                        <div>
+                            <a href="{% url 'board02_write' %}">글올리기</a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tbody> 
+            </table>
+        </div>                
+    </div>
+</div>
+
+    {% endblock content %}

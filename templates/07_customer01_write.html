@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    고객센터
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'customer070101' %}">1. 공지사항</a></div>
+                    <div><a href="{% url 'customer070201' %}">2. 새소식</a></div>
+                    <div><a href="{% url 'customer070301' %}">3. 이벤트</a></div>
+                    <div><a href="{% url 'customer070401' %}">4. Q&A</a></div>
+                </div>
+            </div>
+    <div id="right_aside">
+                
+        <div id="r-subtitle2">
+            글 작성페이지
+        </div>
+        <div>
+            <div class="list_box">
+                <a href="/customer/01/?page={{ page }}">
+                목록</a>
+            </div>
+        </div>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <table class="write_detail">
+                <tr class="wd_title">
+                    <td class="w25">
+                        제목
+                    </td>   
+                    <td>
+                        <input type="text" name="title"  maxlength="50">
+                    </td>
+                </tr>
+                <tr class="wd_contents">
+                    <td class="center_center">
+                        내용
+                    </td>   
+                    <td>
+                        <textarea type="text" name="content"></textarea>
+                    </td>
+                </tr>                    
+            </table>
+            <div class="confirm_btn">                 
+                <table class="confirm_box">
+                    <td>
+                        <input type="submit" value="저장">
+                    </td>
+                </table>
+            </div> 
+        </form>           
+    </div>
+</div>
+
+    {% endblock content %}
+
+

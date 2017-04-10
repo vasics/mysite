@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    고객센터
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'customer070101' %}">1. 공지사항</a></div>
+                    <div><a href="{% url 'customer070201' %}">2. 새소식</a></div>
+                    <div><a href="{% url 'customer070301' %}">3. 이벤트</a></div>
+                    <div><a href="{% url 'customer070401' %}">4. Q&A</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+
+
+  <table cellspacing=1 width=700 border=0>
+      <tr>
+          <td>총 게시물수: {{ search01total }}</td>
+      </tr>
+  </table>
+
+   <table cellspacing=1 width=700 border=1>
+
+       {% if customer %}
+          <ul>
+              {% for custom in customer %}
+              <tr>
+                  <td><a href = "{{ custom.id }}">{{ custom.title }}</a></td>
+              </tr>
+              {% endfor %}
+          </ul>
+      {% else %}
+          <p>No Data.</p>
+      {% endif %}
+  </table>
+
+                  <div class="text_center">
+                    <table id="search_table">
+                        <tr>
+                            <td>
+                                <input type="text" name="search01">
+                            </td>
+                            <td>
+                                <input type="button" value="검색">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <p><a href="{% url 'customer01_write' %}"><input type='button' value='글쓰기' /></a></p>
+
+            </div>
+
+        </div>
+
+    {% endblock content %}

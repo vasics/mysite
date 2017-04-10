@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'finance0301' %}">1. 재무설계</a></div>
+                    <div id="lnb-1-1">
+                    <div><a href="{% url 'finance0301' %}">: 재무설계란</a></div>
+                    <div><a href="{% url 'finance0302' %}">: 재무설계절차</a></div>
+                    <div class="lnb-borderbox"><a href="{% url 'finance030301' %}">: 재무설계분야</a></div>
+                    </div>
+                    <div><a href="{% url 'finance030401' %}">2. 상담효과</a></div>
+                    <div><a href="{% url 'finance030501' %}">3. 진단체크</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle2">
+                    재무설계분야
+                </div>
+                <div id="fa-r-second">
+                    <table id="fa-r-tb1">
+                        <tr>
+                            <td><a href="{% url 'finance030301' %}">투자설계</a></td>
+                            <td><a href="{% url 'finance030302' %}">은퇴설계</a></td>
+                            <td><a href="{% url 'finance030303' %}">부동산설계</a></td>
+                            <td><a href="{% url 'finance030304' %}">보험설계</a></td>
+                            <td class="border-box-2px"><a href="{% url 'finance030305' %}">세금설계</a></td>
+                            <td><a href="{% url 'finance030306' %}">증여, 상속설계</a></td>
+
+                        </tr>
+                    </table>
+                </div>
+                <div id="fa-r-third">
+                    <div id="far-third">
+                        세금설계
+                    </div>
+                    <table id="fa-r-tb2">
+                        <tr>
+                            <td id="fatb2-1">
+                                세금설계란?
+                            </td>
+                            <td id="fatb-1-2">
+                                그림
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="fa-r-fourth">
+                    <div id="far-fourth">
+                        세금의 종류
+                    </div>
+                    <table id="fa-r-tb3">
+                        <tr>
+                            <td id="fatb3-1">
+                                종류
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="fa-r-fifth">
+                    <div id="far-fifth">
+                        절세 전략
+                    </div>
+                    <table id="fa-r-tb4">
+                        <tr>
+                            <td id="fatb4-1">
+                                전략
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    {% endblock content %}

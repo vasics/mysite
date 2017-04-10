@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+    {% block content %}
+       
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    상담 안내
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'counsel050101' %}">1. 상담후기</a></div>
+                    <div class="lnb-borderbox"><a href="{% url 'counsel050201' %}">2. 재무상담신청</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle">
+                    상담후기
+                </div>
+                <div>
+                    <table class="counsel_table detail">
+                        <tbody>   
+                        <tr class="ctd_title">
+                            <td class="ctd_subtitle">제목</td>
+                            <td></td>
+                            <td class="ctd_subtitle">고객명</td>
+                            <td></td>
+                            <td class="ctd_subtitle">조회수</td>
+                            <td></td>
+                            <td class="ctd_subtitle">담당 FP</td>
+                            <td></td>        
+                        </tr>
+                        <tr>
+                            <td colspan="8">   
+                                사진
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">   
+                                내용
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flex_center">
+                    <div class="apply_btn">
+                        <a href="05_counsel0103.html">담당 FP에게 상담신청</a>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        
+    {% endblock content %}
