@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
     {% block content %}
-       
+
         <div class="basic_cont">
             <div id="left_aside">
                 <div id="left_nav">
@@ -17,36 +17,45 @@
                 </div>
                 <div>
                     <table class="counsel_table detail">
-                        <tbody>   
-                        <tr class="ctd_title">
-                            <td class="ctd_subtitle">제목</td>
-                            <td></td>
-                            <td class="ctd_subtitle">고객명</td>
-                            <td></td>
-                            <td class="ctd_subtitle">조회수</td>
-                            <td></td>
-                            <td class="ctd_subtitle">담당 FP</td>
-                            <td></td>        
-                        </tr>
+                        <form method="POST" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <tbody>
                         <tr>
-                            <td colspan="8">   
-                                사진
+                            <td colspan="2">
+                                고객명<input type="text" name="writer"  maxlength="50" />
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="8">   
-                                내용
+                            <td colspan="2">
+                                담당FP<input type="text" name="fp"  maxlength="15" />
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="2">
+                                제목<input type="text" name="title"  maxlength="30" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                내용<textarea type="text" name="content"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                업로드<input type="file" name="photo" />
+                            </td>
+                        </tr>
+                        <p><input type="submit" value="저장" /></p>
                         </tbody>
+                        </form>
                     </table>
                 </div>
                 <div class="flex_center">
                     <div class="apply_btn">
                         <a href="05_counsel0103.html">담당 FP에게 상담신청</a>
-                    </div> 
+                    </div>
                 </div>
             </div>
         </div>
-        
+
     {% endblock content %}

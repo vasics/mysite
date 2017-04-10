@@ -17,26 +17,14 @@
                 </div>
                 <div>
                     <table class="counsel_table">
+                        {% for counsel in counsel %}
                         <tr>
-                            <td>사진</td>
-                            <td>내용 / 조회수 / 등록일</td>
+                            {% if counsel.photo %}
+                            <td><img src="{{ counsel.photo.url }}" /></td>
+                            {% endif %}
+                            <td>{{ counsel.content }} / {{ counsel.hits }} / {{ counsel.created_at }}</td>
                         </tr>
-                        <tr>
-                            <td>사진</td>
-                            <td>내용 / 조회수 / 등록일</td>
-                        </tr>
-                        <tr>
-                            <td>사진</td>
-                            <td>내용 / 조회수 / 등록일</td>
-                        </tr>
-                        <tr>
-                            <td>사진</td>
-                            <td>내용 / 조회수 / 등록일</td>
-                        </tr>
-                        <tr>
-                            <td>사진</td>
-                            <td>내용 / 조회수 / 등록일</td>
-                        </tr>
+                        {% endfor %}
                     </table>
                 </div>
                 <div>
@@ -54,7 +42,7 @@
                         </td>
                         <td class="question_box">
                             <div>
-                                <a href="{% url 'board01_write' %}">글올리기</a>
+                                <a href="{% url 'c01_write' %}">글올리기</a>
                             </div>
                         </td>
                         <tbody>

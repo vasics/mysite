@@ -35,7 +35,9 @@ from knowledge.views import board06_detail, board06_edit, board06_delete, board0
 from knowledge.views import search06list, board06_complete, board06_different, board06_deleteconfirm1, board06_editconfirm
 from knowledge.views import board06_answer, board06_answeredit, board06_answerdelete, board06_answerdeletecon
 
-from counsel.views import counsel050101, counsel050102, counsel050201
+from counsel.views import counsel050101, counsel050201
+from counsel.views import c01_write, c01_detail
+
 from customer.views import customer070101, customer070201, customer070301, customer070401
 from customer.views import customer01_detail, customer01_edit, customer01_delete, customer01_write, customer01_edit_db
 from customer.views import customer01_search01list, customer01_complete, customer01_different, customer01_deleteconfirm
@@ -154,8 +156,12 @@ urlpatterns = [
     url(r'^knowledge/06/(?P<pk>\d+)/board06_answeredit/$', board06_answeredit, name='board06_answeredit'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_answerdeletecon/$', board06_answerdeletecon, name='board06_answerdeletecon'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_answerdelete/$', board06_answerdelete, name='board06_answerdelete'),
-    url(r'^counsel/0101/$', counsel050101, name='counsel050101'),
-    url(r'^counsel/0102/$', counsel050102, name='counsel050102'),
+
+    url(r'^counsel/01/$', counsel050101, name='counsel050101'),
+    url(r'^counsel/01/c01_write/$', c01_write, name='c01_write'),
+    url(r'^counsel/01/(?P<pk>\d+)/$', c01_detail, name='c01_detail'),
+
+
     url(r'^counsel/0201/$', counsel050201, name='counsel050201'),
 
     url(r'^mall/01/$', mall0601, name='mall0601'),
