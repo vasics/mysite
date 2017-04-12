@@ -16,48 +16,48 @@
                     상담 신청 작성란
                 </div>
                 <div>
-                    <form action="">   
+                    <form method="POST" action="">   {% csrf_token %}
                         <table class="counsel_table apply">
                             <tbody>   
                                 <tr>
                                     <td class="cta_sub">*이름</td>
-                                    <td></td>
+                                    <td><input type="text" name="writer" maxlength="20"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*출생년도</td>
-                                    <td></td>
+                                    <td><input type="text" name="birth" maxlength="20"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*연락처</td>
-                                    <td></td>
+                                    <td><input type="text" name="tel" maxlength="20"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*이메일</td>
-                                    <td></td>
+                                    <td><input type="text" name="email" maxlength="40"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*거주지역</td>
-                                    <td></td>
+                                    <td><input type="text" name="address" maxlength="20"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*직업</td>
-                                    <td></td>
+                                    <td><input type="text" name="job" maxlength="20"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">상담 분야</td>
-                                    <td></td>
+                                    <td><input type="text" name="area" maxlength="10"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">연락가능시간</td>
-                                    <td></td>
+                                    <td><input type="text" name="time" maxlength="20"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">상담 희망 FP</td>
-                                    <td></td>
+                                    <td><input type="text" name="fp" maxlength="15">{{ fp }}</td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">문의내용</td>
-                                    <td></td>
+                                    <td><input type="text" name="content" maxlength="50"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -72,10 +72,10 @@
                                 위 내용에 동의하십니까?    
                             </span>
                             <span>
-                                <input type="button" value="예">
+                                <input type="radio" name="agree" checked="checked" value="예">
                             </span>
                             <span>
-                                <input type="button" value="아니오">
+                                <input type="radio" name="agree" value="아니오">
                             </span>                         
                         </div>
                         <div class="counsel_apply confirm">
@@ -84,11 +84,10 @@
                                     <input type="submit" value="확인">
                                 </span>
                                 <span>
-                                    <input type="reset" value="취소">
+                                    <input type="reset" name="cancel" value="취소">
                                 </span>
                             </div>
                         </div>
-                        
                     </form>
                 </div>
             </div>

@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    상담 안내
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'counsel050101' %}">1. 상담후기</a></div>
+                    <div class="lnb-borderbox"><a href="{% url 'counsel050201' %}">2. 재무상담신청</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                <div id="r-subtitle">
+                    상담후기
+                </div>
+                <form method="POST" action="">{% csrf_token %}
+                <div>
+                    비밀번호 : <input type="password" name="password">
+                    <input type="submit" value="확인">
+                </div>
+                </form>
+            </div>
+        </div>
+
+    {% endblock content %}

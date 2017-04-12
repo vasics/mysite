@@ -22,11 +22,34 @@
                             {% if counsel.photo %}
                             <td><img src="{{ counsel.photo.url }}" /></td>
                             {% endif %}
-                            <td>{{ counsel.content }} / {{ counsel.hits }} / {{ counsel.created_at }}</td>
+                            <td><a href = "{{ counsel.id }}">
+                                {{ counsel.content }} / {{ counsel.hits }} / {{ counsel.created_at }}</a></td>
                         </tr>
                         {% endfor %}
                     </table>
                 </div>
+                <div class="pagination">
+                {% if counsel.has_other_pages %}
+                    {% if counsel.has_previous %}
+                        <a href="?page={{ counsel.previous_page_number }}">&laquo;</a>
+                    {% else %}
+                        &laquo;
+                    {% endif %}
+                    {% for i in counsel.paginator.page_range %}
+                        {% if counsel.number == i %}
+                            <b>{{ i }}</b>
+                        {% else %}
+                            <a href="?page={{ i }}">{{ i }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if counsel.has_next %}
+                        <a href="?page={{ counsel.next_page_number }}">&raquo;</a>
+                    {% else %}
+                        &raquo;
+                    {% endif %}
+                {% endif %}
+                </div>
+
                 <div>
                     <table class="search_table">
                         <tbody>

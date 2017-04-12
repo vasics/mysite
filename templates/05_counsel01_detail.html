@@ -38,15 +38,21 @@
                             <td colspan="8">   
                                 {{ counsel.content }}
                             </td>
+                            <td class="edit_box">
+                                <a href="/counsel/01/{{ pk }}/editpw">수정</a>
+                            </td>
+                            <td class="edit_box">
+                                <a href="/counsel/01/{{ pk }}/deletepw">삭제</a>
+                            </td>
                         </tr>
-                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 <div class="flex_center">
                     <div class="apply_btn">
-                        <a href="05_counsel0103.html">담당 FP에게 상담신청</a>
-                    </div> 
+                        <a href="{% url 'counsel050202' pk %}">담당 FP에게 상담신청</a>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>

@@ -35,3 +35,9 @@ class Customer03(models.Model):
 
     def __str__(self):
         return self.title
+
+class Customer04(models.Model):
+    title = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    hits = models.IntegerField(default=0, null=True, blank=True)

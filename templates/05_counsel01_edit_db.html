@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    상담 안내
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'counsel050101' %}">1. 상담후기</a></div>
+                    <div class="lnb-borderbox"><a href="{% url 'counsel050201' %}">2. 재무상담신청</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+                수정되었습니다.
+                <a href="">
+                    <input type="submit" value="확인"></a>
+            </div>
+        </div>
+
+    {% endblock content %}

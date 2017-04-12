@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.conf.urls.static import static
 from start.views import index
+from django.conf import settings
 from login.views import choice, login_form, terms, register, success, check, logout, logout_process
 from introduction.views import company0201, company0202, company0203, company0204
 from finance.views import finance0301, finance0302, finance030301, finance030302, finance030303, finance030304
@@ -35,8 +37,9 @@ from knowledge.views import board06_detail, board06_edit, board06_delete, board0
 from knowledge.views import search06list, board06_complete, board06_different, board06_deleteconfirm1, board06_editconfirm
 from knowledge.views import board06_answer, board06_answeredit, board06_answerdelete, board06_answerdeletecon
 
-from counsel.views import counsel050101, counsel050201
-from counsel.views import c01_write, c01_detail
+from counsel.views import counsel050101, counsel050201, counsel050202
+from counsel.views import c01_write, c01_detail, c01_editpw, c01_deletepw, c01_edit, c01_edit_db, c01_auth
+from counsel.views import c01_delete, c01_delete_db
 
 from customer.views import customer070101, customer070201, customer070301, customer070401
 from customer.views import customer01_detail, customer01_edit, customer01_delete, customer01_write, customer01_edit_db
@@ -160,9 +163,17 @@ urlpatterns = [
     url(r'^counsel/01/$', counsel050101, name='counsel050101'),
     url(r'^counsel/01/c01_write/$', c01_write, name='c01_write'),
     url(r'^counsel/01/(?P<pk>\d+)/$', c01_detail, name='c01_detail'),
+    url(r'^counsel/01/(?P<pk>\d+)/editpw/$', c01_editpw, name='c01_editpw'),
+    url(r'^counsel/01/(?P<pk>\d+)/deletepw/$', c01_deletepw, name='c01_deletepw'),
+    url(r'^counsel/01/(?P<pk>\d+)/edit/$', c01_edit, name='c01_edit'),
+    url(r'^counsel/01/(?P<pk>\d+)/edit_db/$', c01_edit_db, name='c01_edit_db'),
+    url(r'^counsel/01/(?P<pk>\d+)/auth/$', c01_auth, name='c01_auth'),
+    url(r'^counsel/01/(?P<pk>\d+)/delete/$', c01_delete, name='c01_delete'),
+    url(r'^counsel/01/(?P<pk>\d+)/delete_db/$', c01_delete_db, name='c01_delete_db'),
 
 
-    url(r'^counsel/0201/$', counsel050201, name='counsel050201'),
+    url(r'^counsel/0201/', counsel050201, name='counsel050201'),
+    url(r'^counsel/0202/(?P<pk>\d+)/', counsel050202, name='counsel050202'),
 
     url(r'^mall/01/$', mall0601, name='mall0601'),
 
@@ -206,3 +217,5 @@ urlpatterns = [
     url(r'^mypage/$', mypage, name='mypage'),
 
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

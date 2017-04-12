@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+    {% block content %}
+
+        <div class="basic_cont">
+            <div id="left_aside">
+                <div id="left_nav">
+                    상담 안내
+                </div>
+                <div id="left-nav-bottom">
+                    <div><a href="{% url 'counsel050101' %}">1. 상담후기</a></div>
+                    <div class="lnb-borderbox"><a href="{% url 'counsel050201' %}">2. 재무상담신청</a></div>
+                </div>
+            </div>
+            <div id="right_aside">
+            <form method="POST" action="/counsel/01/{{ pk }}/edit_db/">
+            {% csrf_token %}
+            <table class="write_detail">
+                <tr class="wd_title">
+                    <td class="w25">
+                        제목
+                    </td>
+                    <td>
+                        <input type="text" name="title" value="{{ p2.title }}" maxlength="50">
+                    </td>
+                </tr>
+                <tr class="wd_contents">
+                    <td class="center_center">
+                        내용
+                    </td>
+                    <td>
+                        <textarea type="text" name="content">{{ p2.content }}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        비밀번호
+                    </td>
+                    <td>
+                        <input type="password" name="password" maxlength="20">
+                    </td>
+                </tr>
+            </table>
+            <div class="confirm_btn">
+                <table class="confirm_box">
+                    <td>
+                        <input type="submit" value="저장">
+                    </td>
+                </table>
+            </div>
+        </form>
+            </div>
+        </div>
+
+    {% endblock content %}
