@@ -1,8 +1,8 @@
-from django.shortcuts import render, render_to_response
-from .models import Customer01, Customer02, Customer03
+from django.shortcuts import render, render_to_response, redirect
+from .models import Customer01, Customer02, Customer03, Customer04
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from customer.forms import Customer01Form, Customer02Form, Customer03Form
+from customer.forms import Customer01Form, Customer02Form, Customer03Form, Customer04Form, Customer04rForm
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -161,20 +161,17 @@ def customer01_search01list(request):
     except KeyError:
         username = None
 
-    if request.GET.get('search01') == None:
+    searchStr = request.GET.get('search')
+    searchCount = Customer01.objects.filter(title__contains=searchStr).count()
+    searchAll = Customer01.objects.filter(title__contains=searchStr).all()
+
+    if searchCount == 0:
         return render_to_response('07_customer01_noresult.html', {'username': username, })
 
-    searchStr = request.GET.get('search01')
-    search01total = Customer01.objects.filter(title__contains=searchStr).count()
-
-    if search01total == None:
-        return render(ruquest, '07_customer01_noresult.html', {'username': username, })
-
-    customer = Customer01.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('07_customer01_search01list.html', {'customer': customer,
-        'search01total': search01total, 'searchStr':searchStr, 'username':username, })
+    return render_to_response('07_customer01_search01list.html', {'searchStr':searchStr, 'username':username,
+    'searchCount': searchCount, 'searchAll': searchAll, })
 
 def customer01_complete(request):
     try:
@@ -488,7 +485,7 @@ def customer03_write(request):
             return render(request, '07_customer03_mustlogin.html')
         else:
             if form.is_valid():
-                """            
+                """
                 now = datetime.now().strftime('20%y%m%d')
                 end = form['end_date']
 
@@ -677,13 +674,50 @@ def customer03_deleteconfirm(request, pk):
 
     return render(request, '07_customer03_mustlogin.html', {'username': username, 'pk':pk, 'page': page, })
 
-
 def customer070401(request):
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    return render(request, '07_customer0401.html', {'username':username, })
+    customer_list = Customer04.objects.all().order_by('-created_at')
 
+    paginator = Paginator(customer_list, 20)
 
+    page = request.GET.get('page', 1)
+    try:
+        customer = paginator.page(page)
+    except PageNotAnInteger:
+        customer = paginator.page(1)
+    except EmptyPage:
+        customer = paginator.page(paginator.num_pages)
+
+    return render(request, '07_customer04.html', {'customer': customer, 'username': username })
+
+def customer04_write(request):
+
+    try:
+        username = request.session["username"]
+    except KeyError:
+        username = None
+
+    form_class = Customer04Form
+    form = form_class(request.POST or None)
+
+    total = Customer04.objects.all().count()
+    page = total // 20
+    page = page + 1
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            total = Customer03.objects.all().count()
+            page = total // 20
+            page = page + 1
+
+            return render(request, '07_customer04.html', {'username': username, 'page': page, })
+
+        else:
+            form = Customer04Form()
+
+    return render(request, '07_customer04_write.html', {'form':form, 'username': username, 'page': page, })

@@ -9,12 +9,9 @@
         <div id="left-nav-bottom">
             <div class="lnb-borderbox"><a href="{% url 'customer070101' %}">1. 공지사항</a></div>
             <div><a href="{% url 'customer070201' %}">2. 새소식</a></div>
-            <div><a href="{% url 'customer070301' %}">3. 이벤트</a></div>    
+            <div><a href="{% url 'customer070301' %}">3. 이벤트</a></div>
             <div><a href="{% url 'customer070401' %}">4. Q&A</a></div>
-    <!--
-            <div><a href="04_knowledge0501.html">5. 세금</a></div>
-            <div><a href="04_knowledge0601.html">6. 궁금합니다.</a></div>          
-    -->
+
         </div>
     </div>
     <div id="right_aside">
@@ -66,14 +63,16 @@
                 <tbody>
                     <td class="search_box">
                         <table class="search_table2">
+                            <form method="get" action="{% url 'customer01_search01list' %}">
                             <td>
-                                <input type="search" id="search_input">   
+                                <input type="search" name="search" id="search_input">
                             </td>
-                            <td> 
-                                <input type="button" value="검색" id="search_btn">
+                            <td>
+                                <input type="submit" value="검색" id="search_btn">
                             </td>
+                            </form>
                         </table>
-                    </td>                    
+                    </td>
                     {% if username %}
                     <td class="question_box">
                         <div>
@@ -83,7 +82,7 @@
                     {% endif %}
                 <tbody>
             </table>
-        </div>                                     
+        </div>
     </div>
 </div>
 

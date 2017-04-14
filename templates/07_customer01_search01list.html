@@ -15,28 +15,20 @@
             </div>
             <div id="right_aside">
 
-
-  <table cellspacing=1 width=700 border=0>
-      <tr>
-          <td>총 게시물수: {{ search01total }}</td>
-      </tr>
-  </table>
-
-   <table cellspacing=1 width=700 border=1>
-
-       {% if customer %}
-          <ul>
-              {% for custom in customer %}
-              <tr>
-                  <td><a href = "{{ custom.id }}">{{ custom.title }}</a></td>
-              </tr>
-              {% endfor %}
-          </ul>
-      {% else %}
-          <p>No Data.</p>
-      {% endif %}
-  </table>
-
+            <table cellspacing=1 width=700 border=0>
+                <tr>
+                    <td>총 게시물수: {{ searchCount }}</td>
+                </tr>
+            </table>
+               <table cellspacing=1 width=700 border=1>
+                      <ul>
+                          {% for search in searchAll %}
+                          <tr>
+                              <td><a href = "{{ search.id }}">{{ search.title }}</a></td>
+                          </tr>
+                          {% endfor %}
+                      </ul>
+               </table>
                   <div class="text_center">
                     <table id="search_table">
                         <tr>

@@ -48,12 +48,11 @@ from customer.views import customer02_detail, customer02_edit, customer02_delete
 from customer.views import customer02_search02list, customer02_complete, customer02_different, customer02_deleteconfirm
 from customer.views import customer03_detail, customer03_edit, customer03_delete, customer03_write, customer03_edit_db
 from customer.views import customer03_search03list, customer03_complete, customer03_different, customer03_deleteconfirm
-
+from customer.views import customer04_write
 
 from mall.views import mall0601
 from english.views import english
 from mypage.views import mypage
-
 
 
 urlpatterns = [
@@ -97,7 +96,6 @@ urlpatterns = [
     url(r'^knowledge/01/complete/$', board01_complete, name='board01_complete'),
     url(r'^knowledge/01/different/$', board01_different, name='board01_different'),
     url(r'^knowledge/01/(?P<pk>\d+)/board01_deleteconfirm/$', board01_deleteconfirm, name='board01_deleteconfirm'),
-
 
     url(r'^knowledge/02/$', knowledge040201, name='knowledge040201'),
     url(r'^knowledge/02/(?P<pk>\d+)/$', board02_detail, name='board02_detail'),
@@ -208,10 +206,10 @@ urlpatterns = [
     url(r'^customer/03/search03list', customer03_search03list, name='customer03_search03list'),
     url(r'^customer/03/complete/$', customer03_complete, name='customer03_complete'),
     url(r'^customer/03/different/$', customer03_different, name='customer03_different'),
-    url(r'^customer/03/(?P<pk>\d+)/customer03_deleteconfirm/$', customer03_deleteconfirm,
-        name='customer03_deleteconfirm'),
+    url(r'^customer/03/(?P<pk>\d+)/customer03_deleteconfirm/$', customer03_deleteconfirm, name='customer03_deleteconfirm'),
 
-    url(r'^customer/0401/$', customer070401, name='customer070401'),
+    url(r'^customer/04/$', customer070401, name='customer070401'),
+    url(r'^customer/04/customer04_write/$', customer04_write, name='customer04_write'),
 
     url(r'^english/$', english, name='english'),
     url(r'^mypage/$', mypage, name='mypage'),
