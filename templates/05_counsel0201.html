@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
     {% block content %}
-       
+
         <div class="basic_cont">
             <div id="left_aside">
                 <div id="left_nav">
@@ -18,49 +18,50 @@
                 <div>
                     <form method="POST" action="">   {% csrf_token %}
                         <table class="counsel_table apply">
-                            <tbody>   
+                            <tbody>
                                 <tr>
                                     <td class="cta_sub">*이름</td>
-                                    <td><input type="text" name="writer" maxlength="20"></td>
+                                    <td><input type="text" name="writer" required maxlength="100"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*출생년도</td>
-                                    <td><input type="text" name="birth" maxlength="20"></td>
+                                    <td><input type="date" name="birth" required maxlength="100"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*연락처</td>
-                                    <td><input type="text" name="tel" maxlength="20"></td>
+                                    <td><input type="tel" name="tel" required placeholder="예> 01012345678 " maxlength="100"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*이메일</td>
-                                    <td><input type="text" name="email" maxlength="40"></td>
+                                    <td><input type="email" name="email" required maxlength="100"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*거주지역</td>
-                                    <td><input type="text" name="address" maxlength="20"></td>
+                                    <td><input type="text" name="address" required maxlength="100"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">*직업</td>
-                                    <td><input type="text" name="job" maxlength="20"></td>
+                                    <td><input type="text" name="job" required maxlength="100"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">상담 분야</td>
-                                    <td><input type="text" name="area" maxlength="10"></td>
+                                    <td><input type="text" name="area" maxlength="100"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">연락가능시간</td>
-                                    <td><input type="text" name="time" maxlength="20"></td>
+                                    <td><input type="time" name="starttime" maxlength="100"></td>
+                                    <td><input type="time" name="endtime" maxlength="100"></td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">상담 희망 FP</td>
-                                    <td><input type="text" name="fp" maxlength="15">{{ fp }}</td>
+                                    <td><input type="text" name="fp" maxlength="100">{{ fp }}</td>
                                 </tr>
                                 <tr>
                                     <td class="cta_sub">문의내용</td>
-                                    <td><input type="text" name="content" maxlength="50"></td>
+                                    <td><input type="text" name="content" maxlength="100"></td>
                                 </tr>
                             </tbody>
-                        </table>
+                          </table>{{ msg }}
                         <div class="agree_title">
                             개인정보보호를 위한 동의사항
                         </div>
@@ -69,28 +70,26 @@
                         </div>
                         <div class="agree_question">
                             <span>
-                                위 내용에 동의하십니까?    
+                                위 내용에 동의하십니까?
                             </span>
-                            <span>
-                                <input type="radio" name="agree" checked="checked" value="예">
-                            </span>
-                            <span>
-                                <input type="radio" name="agree" value="아니오">
-                            </span>                         
                         </div>
                         <div class="counsel_apply confirm">
                             <div>
                                 <span>
-                                    <input type="submit" value="확인">
+                                  예
+                                    <input type="radio" name="agree" value="yes" checked="checked">
+                                  아니오
+                                    <input type="radio" name="agree" value="no">
                                 </span>
                                 <span>
+                                    <input type="submit" value="확인">
                                     <input type="reset" name="cancel" value="취소">
                                 </span>
                             </div>
                         </div>
-                    </form>
-                </div>
-            </div>
+                      </form>
+                    </div>
+              </div>
         </div>
-        
+
    {% endblock content %}

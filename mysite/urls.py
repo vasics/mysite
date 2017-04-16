@@ -39,7 +39,7 @@ from knowledge.views import board06_answer, board06_answeredit, board06_answerde
 
 from counsel.views import counsel050101, counsel050201, counsel050202
 from counsel.views import c01_write, c01_detail, c01_editpw, c01_deletepw, c01_edit, c01_edit_db, c01_auth
-from counsel.views import c01_delete, c01_delete_db
+from counsel.views import c01_delete, c01_delete_db, counsel02save
 
 from customer.views import customer070101, customer070201, customer070301, customer070401
 from customer.views import customer01_detail, customer01_edit, customer01_delete, customer01_write, customer01_edit_db
@@ -169,9 +169,9 @@ urlpatterns = [
     url(r'^counsel/01/(?P<pk>\d+)/delete/$', c01_delete, name='c01_delete'),
     url(r'^counsel/01/(?P<pk>\d+)/delete_db/$', c01_delete_db, name='c01_delete_db'),
 
-
     url(r'^counsel/0201/', counsel050201, name='counsel050201'),
     url(r'^counsel/0202/(?P<pk>\d+)/', counsel050202, name='counsel050202'),
+    url(r'^counsel/02/save/', counsel02save, name='counsel02save'),
 
     url(r'^mall/01/$', mall0601, name='mall0601'),
 

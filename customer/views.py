@@ -711,13 +711,19 @@ def customer04_write(request):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            total = Customer03.objects.all().count()
+            total = Customer04.objects.all().count()
             page = total // 20
             page = page + 1
-
-            return render(request, '07_customer04.html', {'username': username, 'page': page, })
-
+            customer_list = Customer04.objects.all().order_by('-created_at')
+            paginator = Paginator(customer_list, 20)
+            page = request.GET.get('page', 1)
+            try:
+                customer = paginator.page(page)
+            except PageNotAnInteger:
+                customer = paginator.page(1)
+            except EmptyPage:
+                customer = paginator.page(paginator.num_pages)
+            return redirect('customer070401')            
         else:
             form = Customer04Form()
-
     return render(request, '07_customer04_write.html', {'form':form, 'username': username, 'page': page, })

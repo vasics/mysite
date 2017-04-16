@@ -33,19 +33,29 @@
                     <td>{{ custom.created_at }}</td>
                     <td>{{ custom.hits }}</td>
                     </tr>
-                        {% endfor %}
-                    </tbody>
-                      {% for custom in customer %}
                     <tr>
-                    <td>{{ custom.id }}</td>
-                    <td><a href = "{{ custom.id }}">{{ custom.title }}</a></td>
-                    <td>{{ custom.created_at }}</td>
-                    <td>{{ custom.hits }}</td>
+                    <td>{{ custom.content }}</td>
+                    <td><input type="button" value="작성">
+                    <input type="button" value="삭제">
                     </tr>
-                        {% endfor %}
+                    <tr>
+                    정말 삭제하시겠습니까?
+                    <input type="button" value="확인">
+                    </tr>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                            <tr class="wd_content">
+                                <td>
+                                <input type="text" name="content"  maxlength="1000">
+                              </td>
+                              <td>
+                                <input type="submit" value="저장">
+                              </td></tr>
+                            </tr>
+                    </form>
+                    {% endfor %}
                     </tbody>
                 </table>
-
                 <div class="pagination">
                     {% if customer.has_other_pages %}
                     {% if customer.has_previous %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from counsel.models import Counsel01, Counsel02
@@ -166,34 +166,60 @@ def counsel050201(request):
         username = request.session["username"]
     except KeyError:
         username = None
-
-    form = Counsel02Form()
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return render(request, '05_counsel0101.html', {'uername': username, })
-        else:
-            form = Counsel02Form()
-
-    return render(request, '05_counsel0201.html', {'username':username, 'form': form, })
+    if request.method == 'POST' :
+        if request.POST['agree'] == "no" :
+            msg = "동의를 하셔야 신청이 완료됩니다."
+            return render(request, '05_counsel0201.html', {'username':username, 'msg':msg, })
+        form = Counsel02()
+        form.writer = request.POST['writer']
+        form.birth = request.POST['birth']
+        form.tel = request.POST['tel']
+        form.email = request.POST['email']
+        form.address = request.POST['address']
+        form.job = request.POST['job']
+        form.area = request.POST['area']
+        form.starttime = request.POST['starttime']
+        form.endtime = request.POST['endtime']
+        form.fp = request.POST['fp']
+        form.content = request.POST['content']
+        form.agree = request.POST['agree']
+        form.save()
+        return redirect('counsel02save')
+    return render(request, '05_counsel0201.html', {'username':username, })
 
 @csrf_exempt
 
 def counsel050202(request, pk):
-
     try:
         username = request.session["username"]
     except KeyError:
         username = None
     specific = Counsel01.objects.filter(id=pk).get()
     fp = specific.fp
+    if request.method == 'POST' :
+        if request.POST['agree'] == "no" :
+            msg = "동의를 하셔야 신청이 완료됩니다."
+            return render(request, '05_counsel0201.html', {'username':username, 'msg':msg, })
+        form = Counsel02()
+        form.writer = request.POST['writer']
+        form.birth = request.POST['birth']
+        form.tel = request.POST['tel']
+        form.email = request.POST['email']
+        form.address = request.POST['address']
+        form.job = request.POST['job']
+        form.area = request.POST['area']
+        form.starttime = request.POST['starttime']
+        form.endtime = request.POST['endtime']
+        form.fp = request.POST['fp']
+        form.content = request.POST['content']
+        form.agree = request.POST['agree']
+        form.save()
+        return redirect('counsel02save')
+    return render(request, '05_counsel0201.html', {'username':username, 'fp': fp, })
 
-    form = Counsel02Form()
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return render(request, '05_counsel0101.html', {'uername': username, })
-        else:
-            form = Counsel02Form()
-
-    return render(request, '05_counsel0201.html', {'username':username, 'form': form, 'fp': fp, })
+def counsel02save(request):
+    try:
+        username = request.session["username"]
+    except KeyError:
+        username = None
+    return render(request, '05_counsel0201save.html', {'username': username, })

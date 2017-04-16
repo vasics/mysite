@@ -15,17 +15,18 @@ class Counsel01(models.Model):
         return self.title
 
 class Counsel02(models.Model):
-    writer = models.CharField(max_length=20)
-    fp = models.CharField(max_length=15, null=True)
-    content = models.CharField(max_length=50, null=True)
-    agree = models.BooleanField()
-    birth = models.DateField()
+    writer = models.CharField(max_length=15)
+    birth = models.CharField(max_length=20)
     tel = models.IntegerField()
-    email = models.EmailField(max_length=40, unique=True)
+    email = models.CharField(max_length=40)
     address = models.CharField(max_length=20)
     job = models.CharField(max_length=20)
     area = models.CharField(max_length=10, null=True)
-    time = models.CharField(max_length=20, null=True)
+    starttime = models.CharField(max_length=20, null=True)
+    endtime = models.CharField(max_length=20, null=True)
+    fp = models.CharField(max_length=15, null=True)
+    content = models.CharField(max_length=50, null=True)
+    agree = models.CharField(max_length=5)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

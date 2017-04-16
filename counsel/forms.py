@@ -11,5 +11,4 @@ class Counsel02Form(forms.ModelForm):
 
     class Meta:
         model = Counsel02
-        fields = ('writer', 'fp', 'content', 'agree', 'birth', 'tel', 'email',
-                  'address', 'job', 'area', 'time')
+        fields = '__all__'

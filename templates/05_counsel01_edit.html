@@ -20,7 +20,7 @@
                         제목
                     </td>
                     <td>
-                        <input type="text" name="title" value="{{ p2.title }}" maxlength="50">
+                        <input type="text" name="title" value="{{ p2.title }}" required maxlength="50">
                     </td>
                 </tr>
                 <tr class="wd_contents">
@@ -28,7 +28,7 @@
                         내용
                     </td>
                     <td>
-                        <textarea type="text" name="content">{{ p2.content }}</textarea>
+                        <textarea type="text" name="content" required>{{ p2.content }}</textarea>
                     </td>
                 </tr>
                 <tr>
@@ -36,7 +36,7 @@
                         비밀번호
                     </td>
                     <td>
-                        <input type="password" name="password" maxlength="20">
+                        <input type="password" name="password" required maxlength="20">
                     </td>
                 </tr>
             </table>

@@ -1100,15 +1100,12 @@ def board06_write(request):
         username = request.session["username"]
     except KeyError:
         username = None
-
-    form_class = Contacts06qForm
-    form = form_class(request.POST or None)
-
     total = Contacts06q.objects.all().count()
     page = total // 20
     page = page + 1
 
     if request.method == 'POST':
+        form = Contacts06qForm(request.POST)
         if form.is_valid():
             form.save()
             new = Contacts06q.objects.last()
@@ -1120,8 +1117,8 @@ def board06_write(request):
 
             return render(request, '04_knowledge06_complete.html', {'pk': pk, 'username': username, 'page': page, })
 
-        else:
-            form = Contacts06qForm()
+    else:
+        form = Contacts06qForm()
 
     return render(request, '04_knowledge06_write.html', {'form':form, 'username': username, 'page': page, })
 
