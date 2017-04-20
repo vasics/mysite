@@ -57,30 +57,32 @@
                     {% endif %}
                   {% endif %}
                  </div>
-                <div>
-                    <table class="search_table">
-                        <tbody>
-                    <td class="search_box">
-                        <table class="search_table2">
-                            <td>
-                                <input type="search" id="search_input">   
-                            </td>
-                            <td> 
-                                <input type="button" value="검색" id="search_btn">
-                            </td>
-                        </table>
-                    </td>                    
-                        {% if username %}
-                    <td class="question_box">
-                        <div>
-                            <a href="{% url 'customer02_write' %}">글올리기</a>
-                        </div>
-                    </td>
-                    {% endif %}
-                <tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                 <div>
+                     <table class="search_table">
+                         <tbody>
+                             <td class="search_box">
+                                 <table class="search_table2">
+                                     <form method="get" action="{% url 'customer02_search02list' %}">
+                                     <td>
+                                         <input type="search" name="search" id="search_input">
+                                     </td>
+                                     <td>
+                                         <input type="submit" value="검색" id="search_btn">
+                                     </td>
+                                     </form>
+                                 </table>
+                             </td>
+                             {% if username %}
+                             <td class="question_box">
+                                 <div>
+                                     <a href="{% url 'customer02_write' %}">글올리기</a>
+                                 </div>
+                             </td>
+                             {% endif %}
+                         <tbody>
+                     </table>
+                 </div>
+             </div>
+         </div>
 
-    {% endblock content %}
+             {% endblock content %}

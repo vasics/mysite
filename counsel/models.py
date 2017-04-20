@@ -26,7 +26,7 @@ class Counsel02(models.Model):
     endtime = models.CharField(max_length=20, null=True)
     fp = models.CharField(max_length=15, null=True)
     content = models.CharField(max_length=50, null=True)
-    agree = models.CharField(max_length=5)
+    agree = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

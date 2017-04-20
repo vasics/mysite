@@ -126,13 +126,6 @@ def customer01_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -163,12 +156,24 @@ def customer01_search01list(request):
 
     searchStr = request.GET.get('search')
     searchCount = Customer01.objects.filter(title__contains=searchStr).count()
-    searchAll = Customer01.objects.filter(title__contains=searchStr).all()
+    searchAll = Customer01.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    if searchCount == 0:
-        return render_to_response('07_customer01_noresult.html', {'username': username, })
+    paginator = Paginator(searchAll, 20)
+
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
+
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render_to_response('07_customer01_search01list.html', {'searchStr':searchStr, 'username':username,
+        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
 
     return render_to_response('07_customer01_search01list.html', {'searchStr':searchStr, 'username':username,
     'searchCount': searchCount, 'searchAll': searchAll, })
@@ -344,13 +349,6 @@ def customer02_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -379,20 +377,29 @@ def customer02_search02list(request):
     except KeyError:
         username = None
 
-    if request.GET.get('search02') == None:
-        return render_to_response('07_customer02_noresult.html', {'username': username, })
+    searchStr = request.GET.get('search')
+    searchCount = Customer02.objects.filter(title__contains=searchStr).count()
+    searchAll = Customer02.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    searchStr = request.GET.get('search01')
-    search02total = Customer02.objects.filter(title__contains=searchStr).count()
+    paginator = Paginator(searchAll, 20)
 
-    if search02total == None:
-        return render(ruquest, '07_customer02_noresult.html', {'username': username, })
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
-    customer = Customer02.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('07_customer02_search01list.html', {'customer': customer,
-        'search02total': search02total, 'searchStr':searchStr, 'username':username, })
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render_to_response('07_customer02_search02list.html', {'searchStr':searchStr, 'username':username,
+        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+
+    return render_to_response('07_customer02_search02list.html', {'searchStr':searchStr, 'username':username,
+    'searchCount': searchCount, 'searchAll': searchAll, })
 
 def customer02_complete(request):
     try:
@@ -462,6 +469,8 @@ def customer070301(request):
     except EmptyPage:
         customer = paginator.page(paginator.num_pages)
 
+
+
     return render(request, '07_customer03.html', {'customer': customer, 'username': username })
 
 @csrf_exempt
@@ -473,45 +482,19 @@ def customer03_write(request):
     except KeyError:
         username = None
 
-    form_class = Customer03Form
-    form = form_class(request.POST or None)
-
     total = Customer03.objects.all().count()
     page = total // 20
     page = page + 1
 
     if request.method == 'POST':
-        if not username:
-            return render(request, '07_customer03_mustlogin.html')
-        else:
-            if form.is_valid():
-                """
-                now = datetime.now().strftime('20%y%m%d')
-                end = form['end_date']
+        write = User.objects.filter(username=username).get()
+        customer.user_id = write.pk
+        customer.save()
 
-                if end >= now:
-                    stats = "진행중"
-                else:
-                    stats = "종료"
-                """
-                customer = form.save(commit=False)
-                write = User.objects.filter(username=username).get()
-                customer.user_id = write.pk
-                customer.save()
-
-                new = Customer03.objects.last()
-                pk = new.id
-
-                total = Customer03.objects.all().count()
-                page = total // 20
-                page = page + 1
-
-                return render(request, '07_customer03_complete.html', {'pk': pk, 'username': username, 'page': page, })
-
-            else:
-                form = Customer03Form()
-
-    return render(request, '07_customer03_write.html', {'form':form, 'username': username, 'page': page, })
+        new = Customer03.objects.last()
+        pk = new.id
+        return render(request, '07_customer03_complete.html', {'pk': pk, 'username': username, })
+    return render(request, '07_customer03_write.html', {'username': username, 'page': page, })
 
 def customer03_detail(request, pk):
 
@@ -573,13 +556,6 @@ def customer03_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -603,25 +579,33 @@ def customer03_delete(request, pk):
     return render(request, '07_customer03_delete.html', {'page': page, 'username': username, })
 
 def customer03_search03list(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    if request.GET.get('search03') == None:
-        return render_to_response('07_customer03_noresult.html', {'username': username, })
+    searchStr = request.GET.get('search')
+    searchCount = Customer03.objects.filter(title__contains=searchStr).count()
+    searchAll = Customer03.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    searchStr = request.GET.get('search03')
-    search03total = Customer03.objects.filter(title__contains=searchStr).count()
+    paginator = Paginator(searchAll, 20)
 
-    if search03total == None:
-        return render(ruquest, '07_customer03_noresult.html', {'username': username, })
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
-    customer = Customer03.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('07_customer03_search03list.html', {'customer': customer,
-        'search03total': search03total, 'searchStr':searchStr, 'username':username, })
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render_to_response('07_customer03_search03list.html', {'searchStr':searchStr, 'username':username,
+        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+    return render_to_response('07_customer03_search03list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
 
 def customer03_complete(request):
     try:
@@ -723,7 +707,7 @@ def customer04_write(request):
                 customer = paginator.page(1)
             except EmptyPage:
                 customer = paginator.page(paginator.num_pages)
-            return redirect('customer070401')            
+            return redirect('customer070401')
         else:
             form = Customer04Form()
     return render(request, '07_customer04_write.html', {'form':form, 'username': username, 'page': page, })

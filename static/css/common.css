@@ -811,7 +811,7 @@ tbody{
     border-collapse: collapse;
     border: 1px solid;
 }
-.fatb9_first{
+.fatb9-first{
     font-size: 13px;
 }
 #fa-r-tb9 td{
@@ -892,9 +892,6 @@ tbody{
     width: 100%;
     cursor: pointer;
 }
-
-
-
 
 .counsel_table{
     width: 100%;
@@ -1140,4 +1137,25 @@ h3{
     margin-bottom: 10px;
 }
 
+/*faq게시판*/
+.faqs-contents .qna_reply{
+    height: 70px !important;
+}
+.qna_reply_box{
+    float: right;
+    margin: auto;
+    margin-right: 5px;
+}
+.qna_reply_box td{
+    width: 50px;
+}
+.faqs-title{
+    position: relative;
+}
+.faqs-contents{
+    display: none;
+}
+.faqs .hover{
+    cursor: pointer;
+}
 footer{border-top:1px solid;text-align:center;font-size:12px;padding: 20px;}

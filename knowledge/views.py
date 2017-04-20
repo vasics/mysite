@@ -119,13 +119,6 @@ def board01_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -154,20 +147,27 @@ def search01list(request):
     except KeyError:
         username = None
 
-    if request.GET.get('search01') == None:
-        return render_to_response('04_knowledge01_noresult.html', {'username': username, })
+    searchStr = request.GET.get('search')
+    searchCount = Contacts.objects.filter(title__contains=searchStr).count()
+    searchAll = Contacts.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    searchStr = request.GET.get('search01')
-    search01total = Contacts.objects.filter(title__contains=searchStr).count()
+    paginator = Paginator(searchAll, 20)
 
-    if search01total == None:
-        return render(ruquest, '04_knowledge01_noresult.html', {'username': username, })
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
-    contacts = Contacts.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('04_knowledge01_search01list.html', {'contacts': contacts,
-        'search01total': search01total, 'searchStr':searchStr, 'username':username, })
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render_to_response('04_knowledge01_search01list.html', {'searchStr':searchStr, 'username':username,
+        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+    return render_to_response('04_knowledge01_search01list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
 
 def board01_complete(request):
     try:
@@ -289,17 +289,14 @@ def board02_detail(request, pk):
 
     specific_board02 = Contacts02.objects.get(id=pk)
     id = specific_board02.id
-    tpl = loader.get_template('04_knowledge02_detail.html')
 
     total = Contacts02.objects.all().count()
     page = total // 20
     page = page + 1
 
-    ctx = Context({'specific_board02': specific_board02, 'id': id, 'username': username, 'page': page, })
-
     Contacts02.objects.filter(id=pk).update(hits = specific_board02.hits+1)
 
-    return HttpResponse(tpl.render(ctx))
+    return render(request, '04_knowledge02_detail.html', {'specific_board02': specific_board02, 'id': id, 'username': username, 'page': page, })
 
 @csrf_exempt
 
@@ -332,13 +329,6 @@ def board02_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -367,20 +357,27 @@ def search02list(request):
     except KeyError:
         username = None
 
-    if request.GET.get('search02') == None:
-        return render_to_response('04_knowledge02_noresult.html', {'username': username, })
+    searchStr = request.GET.get('search')
+    searchCount = Contacts02.objects.filter(title__contains=searchStr).count()
+    searchAll = Contacts02.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    searchStr = request.GET.get('search02')
-    search02total = Contacts02.objects.filter(title__contains=searchStr).count()
+    paginator = Paginator(searchAll, 20)
 
-    if search02total == None:
-        return render(ruquest, '04_knowledge02_noresult.html', {'username': username, })
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
-    contacts = Contacts02.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('04_knowledge02_search02list.html', {'contacts': contacts,
-        'search02total': search02total, 'searchStr':searchStr, 'username':username, })
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render(request, '04_knowledge02_search02list.html', {'username': username, 'searchStr':searchStr, 'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+
+    return render_to_response('04_knowledge02_search02list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, 'searchCount': searchCount, })
 
 def board02_complete(request):
     try:
@@ -502,17 +499,14 @@ def board03_detail(request, pk):
 
     specific_board03 = Contacts03.objects.get(id=pk)
     id = specific_board03.id
-    tpl = loader.get_template('04_knowledge03_detail.html')
 
     total = Contacts03.objects.all().count()
     page = total // 20
     page = page + 1
 
-    ctx = Context({'specific_board03': specific_board03, 'id': id, 'username': username, 'page': page, })
-
     Contacts03.objects.filter(id=pk).update(hits = specific_board03.hits+1)
 
-    return HttpResponse(tpl.render(ctx))
+    return render(request, '04_knowledge03_detail.html', {'specific_board03': specific_board03, 'id': id, 'username': username, 'page': page, })
 
 @csrf_exempt
 
@@ -545,13 +539,6 @@ def board03_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -580,20 +567,27 @@ def search03list(request):
     except KeyError:
         username = None
 
-    if request.GET.get('search03') == None:
-        return render_to_response('04_knowledge03_noresult.html', {'username': username, })
+    searchStr = request.GET.get('search')
+    searchCount = Contacts03.objects.filter(title__contains=searchStr).count()
+    searchAll = Contacts03.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    searchStr = request.GET.get('search03')
-    search03total = Contacts03.objects.filter(title__contains=searchStr).count()
+    paginator = Paginator(searchAll, 20)
 
-    if search03total == None:
-        return render(ruquest, '04_knowledge03_noresult.html', {'username': username, })
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
-    contacts = Contacts03.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('04_knowledge03_search02list.html', {'contacts': contacts,
-        'search03total': search03total, 'searchStr':searchStr, 'username':username, })
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render_to_response('04_knowledge03_search03list.html', {'searchStr':searchStr, 'username':username,
+        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+    return render_to_response('04_knowledge03_search03list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
 
 def board03_complete(request):
     try:
@@ -715,17 +709,14 @@ def board04_detail(request, pk):
 
     specific_board04 = Contacts04.objects.get(id=pk)
     id = specific_board04.id
-    tpl = loader.get_template('04_knowledge04_detail.html')
 
     total = Contacts04.objects.all().count()
     page = total // 20
     page = page + 1
 
-    ctx = Context({'specific_board04': specific_board04, 'id': id, 'username': username, 'page': page, })
-
     Contacts04.objects.filter(id=pk).update(hits = specific_board04.hits+1)
 
-    return HttpResponse(tpl.render(ctx))
+    return render(request, '04_knowledge04_detail.html', {'specific_board04': specific_board04, 'id': id, 'username': username, 'page': page, })
 
 @csrf_exempt
 
@@ -758,13 +749,6 @@ def board04_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -793,20 +777,28 @@ def search04list(request):
     except KeyError:
         username = None
 
-    if request.GET.get('search04') == None:
-        return render_to_response('04_knowledge04_noresult.html', {'username': username, })
+    searchStr = request.GET.get('search')
+    searchCount = Contacts04.objects.filter(title__contains=searchStr).count()
+    searchAll = Contacts04.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    searchStr = request.GET.get('search04')
-    search04total = Contacts04.objects.filter(title__contains=searchStr).count()
+    paginator = Paginator(searchAll, 20)
 
-    if search04total == None:
-        return render(ruquest, '04_knowledge04_noresult.html', {'username': username, })
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
-    contacts = Contacts04.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('04_knowledge04_search02list.html', {'contacts': contacts,
-        'search04total': search04total, 'searchStr':searchStr, 'username':username, })
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render_to_response('04_knowledge04_search04list.html', {'searchStr':searchStr, 'username':username,
+        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+    return render_to_response('04_knowledge04_search04list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
+
 
 def board04_complete(request):
     try:
@@ -928,17 +920,14 @@ def board05_detail(request, pk):
 
     specific_board05 = Contacts05.objects.get(id=pk)
     id = specific_board05.id
-    tpl = loader.get_template('04_knowledge05_detail.html')
 
     total = Contacts05.objects.all().count()
     page = total // 20
     page = page + 1
 
-    ctx = Context({'specific_board05': specific_board05, 'id': id, 'username': username, 'page': page, })
-
     Contacts05.objects.filter(id=pk).update(hits = specific_board05.hits+1)
 
-    return HttpResponse(tpl.render(ctx))
+    return render(request, '04_knowledge05_detail.html', {'specific_board05': specific_board05, 'id': id, 'username': username, 'page': page, })
 
 @csrf_exempt
 
@@ -971,13 +960,6 @@ def board05_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -1006,20 +988,27 @@ def search05list(request):
     except KeyError:
         username = None
 
-    if request.GET.get('search05') == None:
-        return render_to_response('04_knowledge05_noresult.html', {'username': username, })
+    searchStr = request.GET.get('search')
+    searchCount = Contacts05.objects.filter(title__contains=searchStr).count()
+    searchAll = Contacts05.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    searchStr = request.GET.get('search05')
-    search05total = Contacts05.objects.filter(title__contains=searchStr).count()
+    paginator = Paginator(searchAll, 20)
 
-    if search05total == None:
-        return render(ruquest, '04_knowledge05_noresult.html', {'username': username, })
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
-    contacts = Contacts05.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('04_knowledge05_search05list.html', {'contacts': contacts,
-        'search05total': search05total, 'searchStr':searchStr, 'username':username, })
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render_to_response('04_knowledge05_search05list.html', {'searchStr':searchStr, 'username':username,
+        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+    return render_to_response('04_knowledge05_search05list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
 
 def board05_complete(request):
     try:
@@ -1200,13 +1189,6 @@ def board06_edit_db(request, pk):
     except KeyError:
         username = None
 
-    if len(request.POST['content']) == 0:
-        return HttpResponse('내용을 입력해주세요.')
-
-    if len(request.POST['title']) == 0:
-        return HttpResponse('제목을 입력해주세요.')
-
-    else:
         content = request.POST['content']
         title = request.POST['title']
 
@@ -1235,20 +1217,28 @@ def search06list(request):
     except KeyError:
         username = None
 
-    if request.GET.get('search06') == None:
-        return render_to_response('04_knowledge06_noresult.html', {'username': username, })
+    searchStr = request.GET.get('search')
+    searchCount = Contacts06q.objects.filter(title__contains=searchStr).count()
+    searchAll = Contacts06q.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
-    searchStr = request.GET.get('search01')
-    search06total = Contatcs06q.objects.filter(title__contains=searchStr).count()
+    paginator = Paginator(searchAll, 20)
 
-    if search06total == None:
-        return render(ruquest, '04_knowledge06_noresult.html', {'username': username, })
+    page = request.GET.get('page', 1)
+    try:
+        searchAll = paginator.page(page)
+    except PageNotAnInteger:
+        searchAll = paginator.page(1)
+    except EmptyPage:
+        searchAll = paginator.page(paginator.num_pages)
 
-    customer = Contacts06q.objects.filter(title__contains=searchStr).all()
     # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
 
-    return render_to_response('04_knowledge06_search06list.html', {'customer': customer,
-        'search06total': search06total, 'searchStr':searchStr, 'username':username, })
+    if searchCount == 0:
+        msg = "검색 결과가 없습니다."
+        return render_to_response('04_knowledge06_search06list.html', {'searchStr':searchStr, 'username':username,
+        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+    return render_to_response('04_knowledge06_search06list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
+
 
 def board06_complete(request):
     try:

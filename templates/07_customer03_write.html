@@ -14,7 +14,7 @@
                 </div>
             </div>
     <div id="right_aside">
-                
+
         <div id="r-subtitle2">
             글 작성페이지
         </div>
@@ -30,47 +30,45 @@
                 <tr class="wd_title">
                     <td class="w25">
                         제목
-                    </td>   
+                    </td>
                     <td>
-                        <input type="text" name="title"  maxlength="50">
+                        <input type="text" name="title" required maxlength="50">
                     </td>
                 </tr>
                 <tr class="wd_contents">
                     <td class="center_center">
                         내용
-                    </td>   
+                    </td>
                     <td>
-                        <textarea type="text" name="content"></textarea>
+                        <textarea type="text" required name="content"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    시작시간( ex. 20170405 )
+                    시작일
                     </td>
                     <td>
-                        <input type="number" name="start_date" maxlength="10"
+                        <input type="date" name="start_date" required maxlength="10">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    종료시간( ex. 20170406 )
+                    종료일
                     </td>
                     <td>
-                        <input type="number" name="end_date" maxlength="10"
+                        <input type="date" name="end_date" required maxlength="10">
                     </td>
                 </tr>
             </table>
-            <div class="confirm_btn">                 
+            <div class="confirm_btn">
                 <table class="confirm_box">
                     <td>
                         <input type="submit" value="저장">
                     </td>
                 </table>
-            </div> 
-        </form>           
+            </div>
+        </form>
     </div>
 </div>
 
     {% endblock content %}
-
-
