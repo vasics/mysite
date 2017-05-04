@@ -15,15 +15,14 @@
         </div>
     </div>
     <div id="right_aside">
-                
+
         <div id="r-subtitle2">
             글 작성페이지
         </div>
         <div>
-                    <div class="list_box">
-                        <a href="/knowledge/02/?page={{ page }}">
-                        목록</a>
-                    </div>
+          <div class="list_box">
+          <input type="button" value="목록" onClick="history.go(-1)">
+          </div>
         </div>
         <form method="POST" action="">
             {% csrf_token %}
@@ -31,31 +30,29 @@
                 <tr class="wd_title">
                     <td class="w25">
                         제목
-                    </td>   
+                    </td>
                     <td>
-                        <input type="text" name="title"  maxlength="50">
+                        <input type="text" name="title"  maxlength="50" required>
                     </td>
                 </tr>
                 <tr class="wd_contents">
                     <td class="center_center">
                         내용
-                    </td>   
-                    <td>
-                        <textarea type="text" name="content"></textarea>
                     </td>
-                </tr>                    
+                    <td>
+                        <textarea type="text" name="content" required></textarea>
+                    </td>
+                </tr>
             </table>
-            <div class="confirm_btn">                 
+            <div class="confirm_btn">
                 <table class="confirm_box">
                     <td>
                         <input type="submit" value="저장">
                     </td>
-                </table> 
-            </div> 
-        </form>           
+                </table>
+            </div>
+        </form>
     </div>
 </div>
 
     {% endblock content %}
-
-

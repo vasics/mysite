@@ -4,7 +4,7 @@
         <div class="basic_cont">
             <div id="left_aside">
                 <div id="left_nav">
-                    
+
                 </div>
                 <div id="left-nav-bottom">
                     <div><a href="{% url 'knowledge040101' %}">1. 은행</a></div>
@@ -18,20 +18,20 @@
             <div id="right_aside">
                 <div class="delete_confirm_box">
                        정말 삭제하시겠습니까?
-                </div> 
+                </div>
                 <div class="edit_btn">
                     <table>
-                        <td class="edit_box">  
-                            <a href="/knowledge/05/?page={{ page }}">목록</a>
-                        </td>   
                         <td class="edit_box">
-                            <a href="/knowledge/05/{{ pk }}/board05_delete">확인</a>
+                            <input type="button" value="이전페이지" onClick="history.go(-1)">
+                        </td>
+                        <td class="edit_box">
+                            <a href="{% url 'board05_delete' pk %}">확인</a>
                         </td>
                     </table>
                 </div>
 
            </div>
-              
+
         </div>
 
     {% endblock content %}

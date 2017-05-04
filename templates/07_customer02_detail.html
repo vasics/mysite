@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <td class="ld_subtitle">
-                            작성자 : {{ author.username }} 
+                            작성자 : {{ author.username }}
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;조회수 : {{ specific_board01.hits }}
                         </td>
                     </tr>
@@ -42,21 +42,21 @@
                     </tr>
 
                 </table>
-                
+
                 {% if username %}
                     <div class="edit_btn">
-                        <table>                               
+                        <table>
                             <td class="edit_box">
-                                <a href="/customer/02/{{ specific_board01.id }}/customer02_edit">수정</a>
-                            </td>   
+                                <a href="{% url 'customer02_edit' pk %}">수정</a>
+                            </td>
                             <td class="edit_box">
-                                <a href="/customer/02/{{ specific_board01.id }}/customer02_deleteconfirm">삭제</a>
+                                <a href="{% url 'customer02_deleteconfirm' pk %}">삭제</a>
                             </td>
                         </table>
                     </div>
                 {% endif %}
-                
-                
+
+
                 <div class="list_show">
                     <div class=border-bottom-1px>
                         {% if prev %}
@@ -74,7 +74,7 @@
                     </div>
                 </div>
 
-                    
+
             </div>
         </div>
 

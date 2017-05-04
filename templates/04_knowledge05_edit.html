@@ -20,40 +20,38 @@
         </div>
         <div>
             <div class="list_box">
-                <a href="{% url 'knowledge040501' %}">
-                목록
-                </a>
+              <input type="button" value="이전페이지" onClick="history.go(-1)">
             </div>
-        </div>   
-        <form method="POST" action="/knowledge/05/{{ oldboard05.id }}/board05_edit_db/">
+        </div>
+        <form method="POST" action="{% url 'board05_edit_db' pk %}">
             {% csrf_token %}
             <table class="write_detail">
                 <tr class="wd_title">
                     <td class="w25">
                         제목
-                    </td>   
+                    </td>
                     <td>
-                        <input type="text" name="title" value="{{ oldboard05.title }}" maxlenghth="50">
+                        <input type="text" name="title" value="{{ oldboard05.title }}" maxlenghth="50" required>
                     </td>
                 </tr>
                 <tr class="wd_contents">
                     <td class="center_center">
                         내용
-                    </td>   
-                    <td>                        
-                        <textarea type="text" name="content">{{ oldboard05.content }}</textarea>
                     </td>
-                </tr>                    
+                    <td>
+                        <textarea type="text" name="content" required>{{ oldboard05.content }}</textarea>
+                    </td>
+                </tr>
             </table>
-            <div class="confirm_btn">                 
+            <div class="confirm_btn">
                 <table class="confirm_box">
                     <td>
                         <input type="submit" value="저장">
                     </td>
-                </table> 
+                </table>
             </div>
         </form>
-   </div>  
+   </div>
 </div>
 
     {% endblock content %}

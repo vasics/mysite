@@ -21,10 +21,9 @@
             증권
         </div>
         <div>
-                    <div class="list_box">
-                        <a href="/knowledge/02/?page={{ page }}">
-                        목록</a>
-                    </div>
+          <div class="list_box">
+              <a href="/knowledge/02/?page={{ page }}">
+              목록</a>
         </div>
         <table class="list_detail">
             <tr>
@@ -36,22 +35,22 @@
                 <td class="ld_contents">
                    {{ specific_board02.content | linebreaks }}
                 </td>
-            </tr>       
+            </tr>
 
         </table>
         {% if username %}
         <div class="edit_btn">
-            <table> 
-                <td class="edit_box"> 
-                    <a href="/knowledge/02/{{ id }}/board02_edit">수정</a>
+            <table>
+                <td class="edit_box">
+                    <a href="{% url 'board02_edit' pk %}">수정</a>
                 </td>
-                <td class="edit_box">  
-                    <a href="/knowledge/02/{{ id }}/board02_deleteconfirm">삭제</a>
+                <td class="edit_box">
+                    <a href="{% url 'board02_deleteconfirm' pk %}">삭제</a>
                 </td>
-            </table> 
+            </table>
         </div>
         {% endif %}
-    </div>              
+    </div>
 </div>
 
     {% endblock content %}

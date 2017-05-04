@@ -21,10 +21,10 @@
             은행
         </div>
         <div>
-                    <div class="list_box">
-                        <a href="/knowledge/01/?page={{ page }}">
-                        목록</a>
-                    </div>
+          <div class="list_box">
+              <a href="/knowledge/01/?page={{ page }}">
+              목록</a>
+          </div>
         </div>
         <table class="list_detail">
             <tr>
@@ -36,22 +36,22 @@
                 <td class="ld_contents">
                    {{ specific_board01.content | linebreaks }}
                 </td>
-            </tr>       
+            </tr>
 
         </table>
         {% if username %}
         <div class="edit_btn">
-            <table>                  
+            <table>
                 <td class="edit_box">
-                    <a href="/knowledge/01/{{ id }}/board01_edit">수정</a>
+                    <a href="{% url 'board01_edit' pk %}">수정</a>
                 </td>
-                <td class="edit_box">   
-                    <a href="/knowledge/01/{{ id }}/board01_deleteconfirm">삭제</a>
-                </td> 
-            </table> 
+                <td class="edit_box">
+                    <a href="{% url 'board01_deleteconfirm' pk %}">삭제</a>
+                </td>
+            </table>
         </div>
         {% endif %}
-    </div>              
+    </div>
 </div>
 
     {% endblock content %}

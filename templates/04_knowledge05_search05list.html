@@ -41,9 +41,9 @@
                 <div class="pagination">
                     {% if searchAll.has_other_pages %}
                     {% if searchAll.has_previous %}
-                        <a href="?page={{ searchAll.previous_page_number }}">&laquo;</a>
+                        <a href="?page={{ searchAll.previous_page_number }}">이전페이지</a>
                     {% else %}
-                        &laquo;
+                        이전페이지
                     {% endif %}
                     {% for i in searchAll.paginator.page_range %}
                     {% if searchAll.number == i %}
@@ -53,9 +53,9 @@
                     {% endif %}
                     {% endfor %}
                     {% if searchAll.has_next %}
-                        <a href="?page={{ searchAll.next_page_number }}">&raquo;</a>
+                        <a href="?page={{ searchAll.next_page_number }}">다음페이지</a>
                     {% else %}
-                        &raquo;
+                        다음페이지
                     {% endif %}
                     {% endif %}
                 </div>

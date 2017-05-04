@@ -16,18 +16,18 @@
             <div id="right_aside">
                 <div class="delete_confirm_box">
                    정말 삭제하시겠습니까?
-                </div>   
+                </div>
                 <div class="edit_btn">
                     <table>
-                        <td class="edit_box">   
-                            <a href="/customer/01/?page={{ page }}">목록</a>
-                        <td>   
                         <td class="edit_box">
-                            <a href="/customer/01/{{ pk }}/customer01_delete">확인</a>
+                          <input type="button" value="이전페이지" onClick="history.go(-1)">
                         <td>
-                    </table> 
+                        <td class="edit_box">
+                          <a href="{% url 'customer01_delete' pk %}">확인</a>
+                        <td>
+                    </table>
                 </div>
-               
+
             </div>
         </div>
 

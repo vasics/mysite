@@ -20,32 +20,30 @@
         </div>
         <div>
             <div class="list_box">
-                <a href="{% url 'knowledge040601' %}">
-                목록
-                </a>
+                <input type="button" value="본문" onClick="history.go(-1)">
             </div>
-        </div>   
+        </div>
         <form method="POST" action="">
             {% csrf_token %}
             <table class="write_detail">
                 <tr class="wd_contents">
                     <td class="center_center">
                         내용
-                    </td>   
-                    <td>                        
-                        <textarea type="text" name="reply">{{ specific.reply }}</textarea>
                     </td>
-                </tr>                    
+                    <td>
+                        <textarea type="text" name="reply" required>{{ specific.reply }}</textarea>
+                    </td>
+                </tr>
             </table>
-            <div class="confirm_btn">                 
+            <div class="confirm_btn">
                 <table class="confirm_box">
                     <td>
                         <input type="submit" value="저장">
                     </td>
-                </table> 
+                </table>
             </div>
         </form>
-   </div>  
+   </div>
 </div>
 
     {% endblock content %}

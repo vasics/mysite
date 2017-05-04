@@ -16,42 +16,40 @@
         </div>
     </div>
     <div id="right_aside">
+      <div id="r-subtitle2">
+          세금
+      </div>
+      <div>
+        <div class="list_box">
+            <a href="/knowledge/05/?page={{ page }}">
+            목록</a>
+      </div>
+      <table class="list_detail">
+          <tr>
+              <td class="ld_title">
+                 <h1>{{specific_board05.title }}</h1>
+              </td>
+          </tr>
+          <tr>
+              <td class="ld_contents">
+                 {{ specific_board05.content | linebreaks }}
+              </td>
+          </tr>
 
-        <div id="r-subtitle2">
-            세금
-        </div>
-        <div>
-                    <div class="list_box">
-                        <a href="/knowledge/05/?page={{ page }}">
-                        목록</a>
-                    </div>
-        </div>
-        <table class="list_detail">
-            <tr>
-                <td class="ld_title">
-                   <h1>{{specific_board05.title }}</h1>
-                </td>
-            </tr>
-            <tr>
-                <td class="ld_contents">
-                   {{ specific_board05.content | linebreaks }}
-                </td>
-            </tr>       
-
-        </table>
-        {% if username %}
-        <div class="edit_btn">
-            <table>                  
-                <td class="edit_box">
-                    <a href="/knowledge/05/{{ id }}/board05_edit">수정</a>
-                </td>
-                <td class="edit_box">   
-                    <a href="/knowledge/05/{{ id }}/board05_deleteconfirm">삭제</a>
-                </td> 
-            </table> 
-        </div>
-        {% endif %}
-    </div>              
+      </table>
+      {% if username %}
+      <div class="edit_btn">
+          <table>
+              <td class="edit_box">
+                  <a href="{% url 'board05_edit' pk %}">수정</a>
+              </td>
+              <td class="edit_box">
+                  <a href="{% url 'board05_deleteconfirm' pk %}">삭제</a>
+              </td>
+          </table>
+      </div>
+      {% endif %}
+  </div>
 </div>
 
-    {% endblock content %}
+  {% endblock content %}

@@ -15,14 +15,13 @@
         </div>
     </div>
     <div id="right_aside">
-                
+
         <div id="r-subtitle2">
             답변 작성페이지
         </div>
         <div>
             <div class="list_box">
-                <a href="/knowledge/06/?page={{ page }}">
-                목록</a>
+                <input type="button" value="본문" onClick="history.go(-1)">
             </div>
         </div>
         <form method="POST" action="">
@@ -31,23 +30,21 @@
                 <tr class="wd_contents">
                     <td class="center_center">
                         내용
-                    </td>   
+                    </td>
                     <td>
-                        <textarea type="text" name="reply"></textarea>
+                        <textarea type="text" name="reply" required></textarea>
                     </td>
                 </tr>
             </table>
-            <div class="confirm_btn">                 
+            <div class="confirm_btn">
                 <table class="confirm_box">
                     <td>
                         <input type="submit" value="저장">
                     </td>
-                </table> 
-            </div> 
-        </form>           
+                </table>
+            </div>
+        </form>
     </div>
 </div>
 
     {% endblock content %}
-
-

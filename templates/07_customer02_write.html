@@ -19,10 +19,9 @@
             글 작성페이지
         </div>
         <div>
-                    <div class="list_box">
-                        <a href="/customer/02/?page={{ page }}">
-                        목록</a>
-                    </div>
+            <div class="list_box">
+              <input type="button" value="목록" onClick="history.go(-1)">
+            </div>
         </div>
         <form method="POST" action="">
             {% csrf_token %}
@@ -32,7 +31,7 @@
                         제목
                     </td>
                     <td>
-                        <input type="text" name="title"  maxlength="50">
+                        <input type="text" name="title"  maxlength="50" required>
                     </td>
                 </tr>
                 <tr class="wd_contents">
@@ -40,7 +39,7 @@
                         내용
                     </td>
                     <td>
-                        <textarea type="text" name="content"></textarea>
+                        <textarea type="text" name="content" required></textarea>
                     </td>
                 </tr>
             </table>
@@ -56,4 +55,3 @@
 </div>
 
     {% endblock content %}
-

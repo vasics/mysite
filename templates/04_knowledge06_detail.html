@@ -56,14 +56,17 @@
                 {% if username %}
                 <div class="edit_btn">
                   <table>
+                    {% if not r_form.reply %}
                     <td class="edit_box">
-                      <a href="/knowledge/06/{{ pk }}/board06_answer">답변작성</a>
+
+                      <a href="{% url 'board06_answer' pk %}">답변작성</a>
+                    </td>
+                    {% endif %}
+                    <td class="edit_box">
+                      <a href="{% url 'board06_answeredit' pk %}">답변수정</a>
                     </td>
                     <td class="edit_box">
-                      <a href="/knowledge/06/{{ pk }}/board06_answeredit">답변수정</a>
-                    </td>
-                    <td class="edit_box">
-                      <a href="/knowledge/06/{{ pk }}/board06_answerdeletecon">답변삭제</a>
+                      <a href="{% url 'board06_answerdeletecon' pk %}">답변삭제</a>
                     </td>
                   </table>
                 </div>
@@ -86,14 +89,14 @@
                     </div>
                 </div>
         <div class="edit_btn">
-            <table>                  
+            <table>
                 <td class="edit_box">
-                    <a href="/knowledge/06/{{ pk }}/board06_editconfirm">수정</a>
+                    <a href="{% url 'board06_editconfirm' pk %}">수정</a>
                 </td>
-                <td class="edit_box">   
-                    <a href="/knowledge/06/{{ pk }}/board06_deleteconfirm1">삭제</a>
-                </td> 
-            </table> 
+                <td class="edit_box">
+                    <a href="{% url 'board06_deleteconfirm1' pk %}">삭제</a>
+                </td>
+            </table>
         </div>
     </div>
 </div>

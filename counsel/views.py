@@ -11,9 +11,7 @@ def counsel050101(request):
         username = None
 
     counsel_list = Counsel01.objects.all().order_by('-created_at')
-
-    paginator = Paginator(counsel_list, 5)
-
+    paginator = Paginator(counsel_list, 10)
     page = request.GET.get('page', 1)
     try:
         counsel = paginator.page(page)
@@ -22,7 +20,13 @@ def counsel050101(request):
     except EmptyPage:
         counsel = paginator.page(paginator.num_pages)
 
-    return render(request, '05_counsel0101.html', {'username':username, 'counsel': counsel, })
+    index = paginator.page_range.index(counsel.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    return render(request, '05_counsel0101.html', {'username':username, 'counsel': counsel, 'page': page, 'page_range': page_range, })
 
 @csrf_exempt
 
@@ -32,6 +36,16 @@ def c01_write(request):
         username = request.session["username"]
     except KeyError:
         username = None
+
+    counsel_list = Counsel01.objects.all().order_by('-created_at')
+    paginator = Paginator(counsel_list, 10)
+    page = request.GET.get('page', 1)
+    try:
+        counsel = paginator.page(page)
+    except PageNotAnInteger:
+        counsel = paginator.page(1)
+    except EmptyPage:
+        counsel = paginator.page(paginator.num_pages)
     form = Counsel01Form()
     if request.method == 'POST':
         form = Counsel01Form(request.POST or None, request.FILES or None)
@@ -43,10 +57,10 @@ def c01_write(request):
             pk = new.id
             counsel_list = Counsel01.objects.filter(id__lte=pk).order_by('-created_at')
             return render(request, '05_counsel01_detail.html', {'pk': pk, 'counsel_list': counsel_list,
-                                                                'username': username, })
+                                                                'username': username, 'page': page, })
         else:
             form = Counsel01Form()
-    return render(request, '05_counsel01_write.html', {'form': form, 'username': username, })
+    return render(request, '05_counsel01_write.html', {'form': form, 'username': username, 'page': page, })
 
 def c01_detail(request, pk):
 

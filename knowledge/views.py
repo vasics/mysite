@@ -1,4 +1,4 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, redirect
 from .models import Contacts, Contacts02, Contacts03, Contacts04, Contacts05, Contacts06q
 from .models2 import Contacts06a
 from django.views.decorators.csrf import csrf_exempt
@@ -6,7 +6,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from knowledge.forms import ContactsForm, Contacts02Form, Contacts03Form, Contacts04Form, Contacts05Form
 from knowledge.forms import Contacts06qForm, Contacts06aForm
 from django.http import HttpResponse
-from django.template import loader, Context
 from django.contrib.auth.models import User
 
 def knowledge040101(request):
@@ -16,9 +15,7 @@ def knowledge040101(request):
         username = None
 
     contact_list = Contacts.objects.all().order_by('-created_at')
-
     paginator = Paginator(contact_list, 20)
-
     page = request.GET.get('page', 1)
     try:
         contacts = paginator.page(page)
@@ -27,7 +24,13 @@ def knowledge040101(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
 
-    return render(request, '04_knowledge01.html', {'contacts': contacts, 'username': username })
+    index = paginator.page_range.index(contacts.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    return render(request, '04_knowledge01.html', {'contacts': contacts, 'username': username, 'page': page, 'page_range': page_range, })
 
 @csrf_exempt
 
@@ -38,36 +41,21 @@ def board01_write(request):
     except KeyError:
         username = None
 
-    form_class = ContactsForm
-    form = form_class(request.POST or None)
-
-    total = Contacts.objects.all().count()
-    page = total // 20
-    page = page + 1
+    form = ContactsForm()
 
     if request.method == 'POST':
-        if not username:
-            return render(request, '04_knowledge01_mustlogin.html')
-        else:
-            if form.is_valid():
-                contacts = form.save(commit=False)
-                write = User.objects.filter(username=username).get()
-                contacts.user_id = write.pk
-                contacts.save()
+        contacts = form.save(commit=False)
+        contacts.title = request.POST['title']
+        contacts.content = request.POST['content']
+        write = User.objects.filter(username=username).get()
+        contacts.user_id = write.pk
+        contacts.save()
 
-                new = Contacts.objects.last()
-                pk = new.id
+        new = Contacts.objects.last()
+        pk = new.id
 
-                total = Contacts.objects.all().count()
-                current = Contacts.objects.filter(pk=pk).order_by('created_at').count()
-                page = (total - current) // 20 + 1
-
-                return render(request, '04_knowledge01_complete.html', {'pk': pk, 'username': username, 'page': page, })
-
-            else:
-                form = ContactsForm()
-
-    return render(request, '04_knowledge01_write.html', {'form':form, 'username': username, 'page': page, })
+        return redirect(board01_detail, pk=pk)
+    return render(request, '04_knowledge01_write.html', {'form':form, 'username': username, })
 
 def board01_detail(request, pk):
 
@@ -76,17 +64,16 @@ def board01_detail(request, pk):
     except KeyError:
         username = None
 
+    pk = pk
     specific_board01 = Contacts.objects.get(id=pk)
-    id = specific_board01.id
-
     total = Contacts.objects.all().count()
     c_count = Contacts.objects.order_by('created_at')[:int(pk)].count()
     page = (total - c_count) // 20 + 1
 
     Contacts.objects.filter(id=pk).update(hits = specific_board01.hits+1)
 
-    return render (request, '04_knowledge01_detail.html', {'specific_board01': specific_board01, 'id': id,
-                                                           'username': username, 'page': page, 'c_count': c_count })
+    return render(request, '04_knowledge01_detail.html', {'specific_board01': specific_board01, 'pk': pk,
+                                                           'username': username, 'page': page, })
 
 @csrf_exempt
 
@@ -97,20 +84,13 @@ def board01_edit(request, pk):
     except KeyError:
         username = None
 
-    if username:
+    user = User.objects.filter(username=username).get()
+    oldboard01 = Contacts.objects.get(id=pk)
 
-        user = User.objects.filter(username=username).get()
-        oldboard01 = Contacts.objects.get(id=pk)
-
-        total = Contacts.objects.all().count()
-        page = total // 20
-        page = page + 1
-
-        if oldboard01.user_id == user.id :
-            return render(request, '04_knowledge01_edit.html', {'oldboard01': oldboard01, 'username': username, 'page': page, })
-        else:
-            return render(request, '04_knowledge01_different.html', {'username': username, })
-    return render(request, '04_knowledge01_mustlogin.html', {'username':username, 'page': page, })
+    if oldboard01.user_id == user.id :
+        return render(request, '04_knowledge01_edit.html', {'oldboard01': oldboard01, 'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge01_different.html', {'username': username, })
 
 def board01_edit_db(request, pk):
 
@@ -119,12 +99,11 @@ def board01_edit_db(request, pk):
     except KeyError:
         username = None
 
-        content = request.POST['content']
-        title = request.POST['title']
+    content = request.POST['content']
+    title = request.POST['title']
+    Contacts.objects.filter(id=pk).update(content=content, title=title)
 
-        Contacts.objects.filter(id=pk).update(content=content, title=title)
-
-        return render(request, '04_knowledge01_edit_db.html', {'pk': pk, 'username': username, })
+    return render(request, '04_knowledge01_edit_db.html', {'pk': pk, 'username': username, })
 
 def board01_delete(request, pk):
 
@@ -136,12 +115,13 @@ def board01_delete(request, pk):
     delete01 = Contacts.objects.get(id=pk)
     delete01.delete()
     total = Contacts.objects.all().count()
-    page = total // 20
-    page = page + 1
+    c_count = Contacts.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
 
-    return render(request, '04_knowledge01_delete.html', {'page': page, 'username': username, })
+    return render(request, '04_knowledge01_delete.html', {'username': username, 'page': page, })
 
 def search01list(request):
+
     try:
         username = request.session["username"]
     except KeyError:
@@ -152,84 +132,59 @@ def search01list(request):
     searchAll = Contacts.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
     paginator = Paginator(searchAll, 20)
-
     page = request.GET.get('page', 1)
     try:
-        searchAll = paginator.page(page)
+        searchPage = paginator.page(page)
     except PageNotAnInteger:
-        searchAll = paginator.page(1)
+        searchPage = paginator.page(1)
     except EmptyPage:
-        searchAll = paginator.page(paginator.num_pages)
+        searchPage = paginator.page(paginator.num_pages)
 
-    # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
+    index = paginator.page_range.index(searchPage.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
 
     if searchCount == 0:
         msg = "검색 결과가 없습니다."
-        return render_to_response('04_knowledge01_search01list.html', {'searchStr':searchStr, 'username':username,
-        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
-    return render_to_response('04_knowledge01_search01list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
-
-def board01_complete(request):
-    try:
-        username = request.session["username"]
-    except KeyError:
-        username = None
-
-    return render(request, '04_knowledge01_complete.html', {'username': username, })
+        return render(request, '04_knowledge01_search01list.html', {'searchStr':searchStr, 'username':username, 'searchCount': searchCount, 'msg': msg, })
+    return render(request, '04_knowledge01_search01list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, 'searchPage': searchPage, 'page_range': page_range, })
 
 def board01_different(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    total = Contacts.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge01_different.html', {'username': username, 'page': page, })
+    return render(request, '04_knowledge01_different.html', {'username': username, })
 
 def board01_deleteconfirm(request, pk):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
     pk = pk
+    user = User.objects.filter(username=username).get()
+    delete01 = Contacts.objects.get(id=pk)
 
-    if username:
-        user = User.objects.filter(username=username).get()
-        delete01 = Contacts.objects.get(id=pk)
-
-        if delete01.user_id == user.id :
-            total = Contacts.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge01_deleteconfirm.html', {'page': page, 'username': username, 'pk': pk, })
-        else:
-            total = Contacts.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge01_different.html', {'username': username, 'page': page, 'pk': pk, })
-
-    total = Contacts.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge01_mustlogin.html', {'username': username, 'pk':pk, 'page': page, })
+    if delete01.user_id == user.id :
+        return render(request, '04_knowledge01_deleteconfirm.html', {'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge01_different.html', {'username': username, 'pk': pk, })
 
 def knowledge040201(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
     contact_list = Contacts02.objects.all().order_by('-created_at')
-
     paginator = Paginator(contact_list, 20)
-
     page = request.GET.get('page', 1)
     try:
         contacts = paginator.page(page)
@@ -238,7 +193,13 @@ def knowledge040201(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
 
-    return render(request, '04_knowledge02.html', {'contacts': contacts, 'username': username })
+    index = paginator.page_range.index(contacts.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    return render(request, '04_knowledge02.html', {'contacts': contacts, 'username': username, 'page': page, 'page_range': page_range, })
 
 @csrf_exempt
 
@@ -249,36 +210,24 @@ def board02_write(request):
     except KeyError:
         username = None
 
-    form_class = Contacts02Form
-    form = form_class(request.POST or None)
-
-    total = Contacts02.objects.all().count()
-    page = total // 20
-    page = page + 1
-
+    form = Contacts02Form()
     if request.method == 'POST':
-        if not username:
-            return render(request, '04_knowledge02_mustlogin.html')
-        else:
-            if form.is_valid():
-                contacts = form.save(commit=False)
-                write = User.objects.filter(username=username).get()
-                contacts.user_id = write.pk
-                contacts.save()
+        contacts = form.save(commit=False)
+        contacts.title = request.POST['title']
+        contacts.content = request.POST['content']
+        write = User.objects.filter(username=username).get()
+        contacts.user_id = write.pk
+        contacts.save()
 
-                new = Contacts02.objects.last()
-                pk = new.id
+        new = Contacts02.objects.last()
+        pk = new.id
 
-                total = Contacts02.objects.all().count()
-                page = total // 20
-                page = page + 1
+        return redirect(board02_detail, pk=pk)
 
-                return render(request, '04_knowledge02_complete.html', {'pk': pk, 'username': username, 'page': page, })
+    else:
+        form = Contacts02Form()
 
-            else:
-                form = Contacts02Form()
-
-    return render(request, '04_knowledge02_write.html', {'form':form, 'username': username, 'page': page, })
+    return render(request, '04_knowledge02_write.html', {'form':form, 'username': username, })
 
 def board02_detail(request, pk):
 
@@ -288,15 +237,13 @@ def board02_detail(request, pk):
         username = None
 
     specific_board02 = Contacts02.objects.get(id=pk)
-    id = specific_board02.id
-
-    total = Contacts02.objects.all().count()
-    page = total // 20
-    page = page + 1
-
     Contacts02.objects.filter(id=pk).update(hits = specific_board02.hits+1)
 
-    return render(request, '04_knowledge02_detail.html', {'specific_board02': specific_board02, 'id': id, 'username': username, 'page': page, })
+    total = Contacts02.objects.all().count()
+    c_count = Contacts02.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
+
+    return render(request, '04_knowledge02_detail.html', {'specific_board02': specific_board02, 'page': page, 'username': username, 'pk': pk, })
 
 @csrf_exempt
 
@@ -307,20 +254,13 @@ def board02_edit(request, pk):
     except KeyError:
         username = None
 
-    if username:
+    user = User.objects.filter(username=username).get()
+    oldboard02 = Contacts02.objects.get(id=pk)
 
-        user = User.objects.filter(username=username).get()
-        oldboard02 = Contacts02.objects.get(id=pk)
-
-        total = Contacts02.objects.all().count()
-        page = total // 20
-        page = page + 1
-
-        if oldboard02.user_id == user.id :
-            return render(request, '04_knowledge02_edit.html', {'oldboard02': oldboard02, 'username': username, 'page': page, })
-        else:
-            return render(request, '04_knowledge02_different.html', {'username': username, })
-    return render(request, '04_knowledge02_mustlogin.html', {'username':username, 'page': page, })
+    if oldboard02.user_id == user.id :
+        return render(request, '04_knowledge02_edit.html', {'oldboard02': oldboard02, 'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge02_different.html', {'username': username, 'pk': pk, })
 
 def board02_edit_db(request, pk):
 
@@ -329,12 +269,11 @@ def board02_edit_db(request, pk):
     except KeyError:
         username = None
 
-        content = request.POST['content']
-        title = request.POST['title']
+    content = request.POST['content']
+    title = request.POST['title']
+    Contacts02.objects.filter(id=pk).update(content=content, title=title)
 
-        Contacts02.objects.filter(id=pk).update(content=content, title=title)
-
-        return render(request, '04_knowledge02_edit_db.html', {'pk': pk, 'username': username, })
+    return render(request, '04_knowledge02_edit_db.html', {'pk': pk, 'username': username, })
 
 def board02_delete(request, pk):
 
@@ -345,9 +284,10 @@ def board02_delete(request, pk):
 
     delete02 = Contacts02.objects.get(id=pk)
     delete02.delete()
+
     total = Contacts02.objects.all().count()
-    page = total // 20
-    page = page + 1
+    c_count = Contacts02.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
 
     return render(request, '04_knowledge02_delete.html', {'page': page, 'username': username, })
 
@@ -362,84 +302,59 @@ def search02list(request):
     searchAll = Contacts02.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
     paginator = Paginator(searchAll, 20)
-
     page = request.GET.get('page', 1)
     try:
-        searchAll = paginator.page(page)
+        searchPage = paginator.page(page)
     except PageNotAnInteger:
-        searchAll = paginator.page(1)
+        searchPage = paginator.page(1)
     except EmptyPage:
-        searchAll = paginator.page(paginator.num_pages)
+        searchPage = paginator.page(paginator.num_pages)
 
-    # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
+    index = paginator.page_range.index(searchPage.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
 
     if searchCount == 0:
         msg = "검색 결과가 없습니다."
-        return render(request, '04_knowledge02_search02list.html', {'username': username, 'searchStr':searchStr, 'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
+        return render(request, '04_knowledge02_search02list.html', {'username': username, 'searchStr':searchStr, 'searchCount': searchCount, 'msg': msg, })
 
-    return render_to_response('04_knowledge02_search02list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, 'searchCount': searchCount, })
-
-def board02_complete(request):
-    try:
-        username = request.session["username"]
-    except KeyError:
-        username = None
-
-    return render(request, '04_knowledge02_complete.html', {'username': username, })
+    return render(request, '04_knowledge02_search02list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, 'searchCount': searchCount, 'page_range': page_range, })
 
 def board02_different(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    total = Contacts02.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge02_different.html', {'username': username, 'page': page, })
+    return render(request, '04_knowledge02_different.html', {'username': username, })
 
 def board02_deleteconfirm(request, pk):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    pk = pk
+    user = User.objects.filter(username=username).get()
+    delete02 = Contacts02.objects.get(id=pk)
 
-    if username:
-        user = User.objects.filter(username=username).get()
-        delete02 = Contacts02.objects.get(id=pk)
-
-        if delete02.user_id == user.id :
-            total = Contacts02.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge02_deleteconfirm.html', {'page': page, 'username': username, 'pk': pk, })
-        else:
-            total = Contacts02.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge02_different.html', {'username': username, 'page': page, 'pk': pk, })
-
-    total = Contacts02.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge02_mustlogin.html', {'username': username, 'pk':pk, 'page': page, })
+    if delete02.user_id == user.id :
+        return render(request, '04_knowledge02_deleteconfirm.html', {'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge02_different.html', {'username': username, 'pk': pk, })
 
 def knowledge040301(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
     contact_list = Contacts03.objects.all().order_by('-created_at')
-
     paginator = Paginator(contact_list, 20)
-
     page = request.GET.get('page', 1)
     try:
         contacts = paginator.page(page)
@@ -448,7 +363,13 @@ def knowledge040301(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
 
-    return render(request, '04_knowledge03.html', {'contacts': contacts, 'username': username })
+    index = paginator.page_range.index(contacts.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    return render(request, '04_knowledge03.html', {'contacts': contacts, 'username': username, 'page': page, 'page_range': page_range, })
 
 @csrf_exempt
 
@@ -459,36 +380,20 @@ def board03_write(request):
     except KeyError:
         username = None
 
-    form_class = Contacts03Form
-    form = form_class(request.POST or None)
-
-    total = Contacts03.objects.all().count()
-    page = total // 20
-    page = page + 1
-
+    form = Contacts03Form()
     if request.method == 'POST':
-        if not username:
-            return render(request, '04_knowledge03_mustlogin.html')
-        else:
-            if form.is_valid():
-                contacts = form.save(commit=False)
-                write = User.objects.filter(username=username).get()
-                contacts.user_id = write.pk
-                contacts.save()
+        contacts = form.save(commit=False)
+        contacts.title = request.POST['title']
+        contacts.content = request.POST['content']
+        write = User.objects.filter(username=username).get()
+        contacts.user_id = write.pk
+        contacts.save()
 
-                new = Contacts03.objects.last()
-                pk = new.id
+        new = Contacts03.objects.last()
+        pk = new.id
 
-                total = Contacts03.objects.all().count()
-                page = total // 20
-                page = page + 1
-
-                return render(request, '04_knowledge03_complete.html', {'pk': pk, 'username': username, 'page': page, })
-
-            else:
-                form = Contacts03Form()
-
-    return render(request, '04_knowledge03_write.html', {'form':form, 'username': username, 'page': page, })
+        return redirect(board03_detail, pk=pk)
+    return render(request, '04_knowledge03_write.html', {'form':form, 'username': username, })
 
 def board03_detail(request, pk):
 
@@ -498,15 +403,13 @@ def board03_detail(request, pk):
         username = None
 
     specific_board03 = Contacts03.objects.get(id=pk)
-    id = specific_board03.id
-
-    total = Contacts03.objects.all().count()
-    page = total // 20
-    page = page + 1
-
     Contacts03.objects.filter(id=pk).update(hits = specific_board03.hits+1)
 
-    return render(request, '04_knowledge03_detail.html', {'specific_board03': specific_board03, 'id': id, 'username': username, 'page': page, })
+    total = Contacts03.objects.all().count()
+    c_count = Contacts03.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
+
+    return render(request, '04_knowledge03_detail.html', {'specific_board03': specific_board03, 'page': page, 'username': username, 'pk': pk, })
 
 @csrf_exempt
 
@@ -517,20 +420,13 @@ def board03_edit(request, pk):
     except KeyError:
         username = None
 
-    if username:
+    user = User.objects.filter(username=username).get()
+    oldboard03 = Contacts03.objects.get(id=pk)
 
-        user = User.objects.filter(username=username).get()
-        oldboard03 = Contacts03.objects.get(id=pk)
-
-        total = Contacts03.objects.all().count()
-        page = total // 20
-        page = page + 1
-
-        if oldboard03.user_id == user.id :
-            return render(request, '04_knowledge03_edit.html', {'oldboard03': oldboard03, 'username': username, 'page': page})
-        else:
-            return render(request, '04_knowledge03_different.html', {'username': username, })
-    return render(request, '04_knowledge03_mustlogin.html', {'username':username, 'page': page, })
+    if oldboard03.user_id == user.id :
+        return render(request, '04_knowledge03_edit.html', {'oldboard03': oldboard03, 'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge03_different.html', {'username': username, 'pk': pk, })
 
 def board03_edit_db(request, pk):
 
@@ -539,12 +435,11 @@ def board03_edit_db(request, pk):
     except KeyError:
         username = None
 
-        content = request.POST['content']
-        title = request.POST['title']
+    content = request.POST['content']
+    title = request.POST['title']
+    Contacts03.objects.filter(id=pk).update(content=content, title=title)
 
-        Contacts03.objects.filter(id=pk).update(content=content, title=title)
-
-        return render(request, '04_knowledge03_edit_db.html', {'pk': pk, 'username': username, })
+    return render(request, '04_knowledge03_edit_db.html', {'pk': pk, 'username': username, })
 
 def board03_delete(request, pk):
 
@@ -555,9 +450,10 @@ def board03_delete(request, pk):
 
     delete03 = Contacts03.objects.get(id=pk)
     delete03.delete()
+
     total = Contacts03.objects.all().count()
-    page = total // 20
-    page = page + 1
+    c_count = Contacts03.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
 
     return render(request, '04_knowledge03_delete.html', {'page': page, 'username': username, })
 
@@ -572,84 +468,58 @@ def search03list(request):
     searchAll = Contacts03.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
     paginator = Paginator(searchAll, 20)
-
     page = request.GET.get('page', 1)
     try:
-        searchAll = paginator.page(page)
+        searchPage = paginator.page(page)
     except PageNotAnInteger:
-        searchAll = paginator.page(1)
+        searchPage = paginator.page(1)
     except EmptyPage:
-        searchAll = paginator.page(paginator.num_pages)
+        searchPage = paginator.page(paginator.num_pages)
 
-    # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
+    index = paginator.page_range.index(searchPage.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
 
     if searchCount == 0:
         msg = "검색 결과가 없습니다."
-        return render_to_response('04_knowledge03_search03list.html', {'searchStr':searchStr, 'username':username,
-        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
-    return render_to_response('04_knowledge03_search03list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
-
-def board03_complete(request):
-    try:
-        username = request.session["username"]
-    except KeyError:
-        username = None
-
-    return render(request, '04_knowledge03_complete.html', {'username': username, })
+        return render(request, '04_knowledge03_search03list.html', {'username': username, 'searchStr':searchStr, 'searchCount': searchCount, 'msg': msg, })
+    return render(request, '04_knowledge03_search03list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, 'searchCount': searchCount, 'page_range': page_range, })
 
 def board03_different(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    total = Contacts03.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge03_different.html', {'username': username, 'page': page, })
+    return render(request, '04_knowledge03_different.html', {'username': username, })
 
 def board03_deleteconfirm(request, pk):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    pk = pk
+    user = User.objects.filter(username=username).get()
+    delete03 = Contacts03.objects.get(id=pk)
 
-    if username:
-        user = User.objects.filter(username=username).get()
-        delete03 = Contacts03.objects.get(id=pk)
-
-        if delete03.user_id == user.id :
-            total = Contacts03.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge03_deleteconfirm.html', {'page': page, 'username': username, 'pk': pk, })
-        else:
-            total = Contacts03.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge03_different.html', {'username': username, 'page': page, 'pk': pk, })
-
-    total = Contacts03.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge03_mustlogin.html', {'username': username, 'pk':pk, 'page': page, })
+    if delete03.user_id == user.id :
+        return render(request, '04_knowledge03_deleteconfirm.html', {'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge03_different.html', {'username': username, 'pk': pk, })
 
 def knowledge040401(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
     contact_list = Contacts04.objects.all().order_by('-created_at')
-
     paginator = Paginator(contact_list, 20)
-
     page = request.GET.get('page', 1)
     try:
         contacts = paginator.page(page)
@@ -658,7 +528,13 @@ def knowledge040401(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
 
-    return render(request, '04_knowledge04.html', {'contacts': contacts, 'username': username })
+    index = paginator.page_range.index(contacts.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    return render(request, '04_knowledge04.html', {'contacts': contacts, 'username': username, 'page': page, 'page_range': page_range, })
 
 @csrf_exempt
 
@@ -669,36 +545,20 @@ def board04_write(request):
     except KeyError:
         username = None
 
-    form_class = Contacts04Form
-    form = form_class(request.POST or None)
-
-    total = Contacts04.objects.all().count()
-    page = total // 20
-    page = page + 1
-
+    form = Contacts04Form()
     if request.method == 'POST':
-        if not username:
-            return render(request, '04_knowledge04_mustlogin.html')
-        else:
-            if form.is_valid():
-                contacts = form.save(commit=False)
-                write = User.objects.filter(username=username).get()
-                contacts.user_id = write.pk
-                contacts.save()
+        contacts = form.save(commit=False)
+        contacts.title = request.POST['title']
+        contacts.content = request.POST['content']
+        write = User.objects.filter(username=username).get()
+        contacts.user_id = write.pk
+        contacts.save()
 
-                new = Contacts04.objects.last()
-                pk = new.id
+        new = Contacts04.objects.last()
+        pk = new.id
 
-                total = Contacts04.objects.all().count()
-                page = total // 20
-                page = page + 1
-
-                return render(request, '04_knowledge04_complete.html', {'pk': pk, 'username': username, 'page': page, })
-
-            else:
-                form = Contacts04Form()
-
-    return render(request, '04_knowledge04_write.html', {'form':form, 'username': username, 'page': page, })
+        return redirect(board04_detail, pk=pk)
+    return render(request, '04_knowledge04_write.html', {'form':form, 'username': username, })
 
 def board04_detail(request, pk):
 
@@ -708,15 +568,13 @@ def board04_detail(request, pk):
         username = None
 
     specific_board04 = Contacts04.objects.get(id=pk)
-    id = specific_board04.id
-
-    total = Contacts04.objects.all().count()
-    page = total // 20
-    page = page + 1
-
     Contacts04.objects.filter(id=pk).update(hits = specific_board04.hits+1)
 
-    return render(request, '04_knowledge04_detail.html', {'specific_board04': specific_board04, 'id': id, 'username': username, 'page': page, })
+    total = Contacts04.objects.all().count()
+    c_count = Contacts04.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
+
+    return render(request, '04_knowledge04_detail.html', {'specific_board04': specific_board04, 'page': page, 'username': username, 'pk': pk, })
 
 @csrf_exempt
 
@@ -727,20 +585,13 @@ def board04_edit(request, pk):
     except KeyError:
         username = None
 
-    if username:
+    user = User.objects.filter(username=username).get()
+    oldboard04 = Contacts04.objects.get(id=pk)
 
-        user = User.objects.filter(username=username).get()
-        oldboard04 = Contacts04.objects.get(id=pk)
-
-        total = Contacts04.objects.all().count()
-        page = total // 20
-        page = page + 1
-
-        if oldboard04.user_id == user.id :
-            return render(request, '04_knowledge04_edit.html', {'oldboard04': oldboard04, 'username': username, 'page': page})
-        else:
-            return render(request, '04_knowledge04_different.html', {'username': username, })
-    return render(request, '04_knowledge04_mustlogin.html', {'username':username, 'page': page, })
+    if oldboard04.user_id == user.id :
+        return render(request, '04_knowledge04_edit.html', {'oldboard04': oldboard04, 'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge04_different.html', {'username': username, 'pk': pk, })
 
 def board04_edit_db(request, pk):
 
@@ -749,12 +600,11 @@ def board04_edit_db(request, pk):
     except KeyError:
         username = None
 
-        content = request.POST['content']
-        title = request.POST['title']
+    content = request.POST['content']
+    title = request.POST['title']
+    Contacts04.objects.filter(id=pk).update(content=content, title=title)
 
-        Contacts04.objects.filter(id=pk).update(content=content, title=title)
-
-        return render(request, '04_knowledge04_edit_db.html', {'pk': pk, 'username': username, })
+    return render(request, '04_knowledge04_edit_db.html', {'pk': pk, 'username': username, })
 
 def board04_delete(request, pk):
 
@@ -765,9 +615,10 @@ def board04_delete(request, pk):
 
     delete04 = Contacts04.objects.get(id=pk)
     delete04.delete()
+
     total = Contacts04.objects.all().count()
-    page = total // 20
-    page = page + 1
+    c_count = Contacts04.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
 
     return render(request, '04_knowledge04_delete.html', {'page': page, 'username': username, })
 
@@ -782,85 +633,58 @@ def search04list(request):
     searchAll = Contacts04.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
     paginator = Paginator(searchAll, 20)
-
     page = request.GET.get('page', 1)
     try:
-        searchAll = paginator.page(page)
+        searchPage = paginator.page(page)
     except PageNotAnInteger:
-        searchAll = paginator.page(1)
+        searchPage = paginator.page(1)
     except EmptyPage:
-        searchAll = paginator.page(paginator.num_pages)
+        searchPage = paginator.page(paginator.num_pages)
 
-    # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
+    index = paginator.page_range.index(searchPage.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
 
     if searchCount == 0:
         msg = "검색 결과가 없습니다."
-        return render_to_response('04_knowledge04_search04list.html', {'searchStr':searchStr, 'username':username,
-        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
-    return render_to_response('04_knowledge04_search04list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
-
-
-def board04_complete(request):
-    try:
-        username = request.session["username"]
-    except KeyError:
-        username = None
-
-    return render(request, '04_knowledge04_complete.html', {'username': username, })
+        return render(request, '04_knowledge04_search04list.html', {'username': username, 'searchStr':searchStr, 'searchCount': searchCount, 'msg': msg, })
+    return render(request, '04_knowledge04_search04list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, 'searchCount': searchCount, 'page_range': page_range, })
 
 def board04_different(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    total = Contacts04.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge04_different.html', {'username': username, 'page': page, })
+    return render(request, '04_knowledge04_different.html', {'username': username, })
 
 def board04_deleteconfirm(request, pk):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    pk = pk
+    user = User.objects.filter(username=username).get()
+    delete04 = Contacts04.objects.get(id=pk)
 
-    if username:
-        user = User.objects.filter(username=username).get()
-        delete04 = Contacts04.objects.get(id=pk)
-
-        if delete04.user_id == user.id :
-            total = Contacts04.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge04_deleteconfirm.html', {'page': page, 'username': username, 'pk': pk, })
-        else:
-            total = Contacts04.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge04_different.html', {'username': username, 'page': page, 'pk': pk, })
-
-    total = Contacts04.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge04_mustlogin.html', {'username': username, 'pk':pk, 'page': page, })
+    if delete04.user_id == user.id :
+        return render(request, '04_knowledge04_deleteconfirm.html', {'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge04_different.html', {'username': username, 'pk': pk, })
 
 def knowledge040501(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
     contact_list = Contacts05.objects.all().order_by('-created_at')
-
     paginator = Paginator(contact_list, 20)
-
     page = request.GET.get('page', 1)
     try:
         contacts = paginator.page(page)
@@ -869,7 +693,13 @@ def knowledge040501(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
 
-    return render(request, '04_knowledge05.html', {'contacts': contacts, 'username': username })
+    index = paginator.page_range.index(contacts.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    return render(request, '04_knowledge05.html', {'contacts': contacts, 'username': username, 'page': page, 'page_range': page_range, })
 
 @csrf_exempt
 
@@ -880,36 +710,20 @@ def board05_write(request):
     except KeyError:
         username = None
 
-    form_class = Contacts05Form
-    form = form_class(request.POST or None)
-
-    total = Contacts05.objects.all().count()
-    page = total // 20
-    page = page + 1
-
+    form = Contacts05Form()
     if request.method == 'POST':
-        if not username:
-            return render(request, '04_knowledge05_mustlogin.html')
-        else:
-            if form.is_valid():
-                contacts = form.save(commit=False)
-                write = User.objects.filter(username=username).get()
-                contacts.user_id = write.pk
-                contacts.save()
+        contacts = form.save(commit=False)
+        contacts.title = request.POST['title']
+        contacts.content = request.POST['content']
+        write = User.objects.filter(username=username).get()
+        contacts.user_id = write.pk
+        contacts.save()
 
-                new = Contacts05.objects.last()
-                pk = new.id
+        new = Contacts05.objects.last()
+        pk = new.id
 
-                total = Contacts05.objects.all().count()
-                page = total // 20
-                page = page + 1
-
-                return render(request, '04_knowledge05_complete.html', {'pk': pk, 'username': username, 'page': page, })
-
-            else:
-                form = Contacts05Form()
-
-    return render(request, '04_knowledge05_write.html', {'form':form, 'username': username, 'page': page, })
+        return redirect(board05_detail, pk=pk)
+    return render(request, '04_knowledge05_write.html', {'form':form, 'username': username, })
 
 def board05_detail(request, pk):
 
@@ -919,15 +733,13 @@ def board05_detail(request, pk):
         username = None
 
     specific_board05 = Contacts05.objects.get(id=pk)
-    id = specific_board05.id
-
-    total = Contacts05.objects.all().count()
-    page = total // 20
-    page = page + 1
-
     Contacts05.objects.filter(id=pk).update(hits = specific_board05.hits+1)
 
-    return render(request, '04_knowledge05_detail.html', {'specific_board05': specific_board05, 'id': id, 'username': username, 'page': page, })
+    total = Contacts05.objects.all().count()
+    c_count = Contacts05.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
+
+    return render(request, '04_knowledge05_detail.html', {'specific_board05': specific_board05, 'page': page, 'username': username, 'pk': pk, })
 
 @csrf_exempt
 
@@ -938,20 +750,13 @@ def board05_edit(request, pk):
     except KeyError:
         username = None
 
-    if username:
+    user = User.objects.filter(username=username).get()
+    oldboard05 = Contacts05.objects.get(id=pk)
 
-        user = User.objects.filter(username=username).get()
-        oldboard05 = Contacts05.objects.get(id=pk)
-
-        total = Contacts05.objects.all().count()
-        page = total // 20
-        page = page + 1
-
-        if oldboard05.user_id == user.id :
-            return render(request, '04_knowledge05_edit.html', {'oldboard05': oldboard05, 'username': username, 'page': page})
-        else:
-            return render(request, '04_knowledge05_different.html', {'username': username, })
-    return render(request, '04_knowledge05_mustlogin.html', {'username':username, 'page': page, })
+    if oldboard05.user_id == user.id :
+        return render(request, '04_knowledge05_edit.html', {'oldboard05': oldboard05, 'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge05_different.html', {'username': username, 'pk': pk, })
 
 def board05_edit_db(request, pk):
 
@@ -960,12 +765,11 @@ def board05_edit_db(request, pk):
     except KeyError:
         username = None
 
-        content = request.POST['content']
-        title = request.POST['title']
+    content = request.POST['content']
+    title = request.POST['title']
+    Contacts05.objects.filter(id=pk).update(content=content, title=title)
 
-        Contacts05.objects.filter(id=pk).update(content=content, title=title)
-
-        return render(request, '04_knowledge05_edit_db.html', {'pk': pk, 'username': username, })
+    return render(request, '04_knowledge05_edit_db.html', {'pk': pk, 'username': username, })
 
 def board05_delete(request, pk):
 
@@ -976,9 +780,10 @@ def board05_delete(request, pk):
 
     delete05 = Contacts05.objects.get(id=pk)
     delete05.delete()
+
     total = Contacts05.objects.all().count()
-    page = total // 20
-    page = page + 1
+    c_count = Contacts05.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
 
     return render(request, '04_knowledge05_delete.html', {'page': page, 'username': username, })
 
@@ -993,73 +798,48 @@ def search05list(request):
     searchAll = Contacts05.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
     paginator = Paginator(searchAll, 20)
-
     page = request.GET.get('page', 1)
     try:
-        searchAll = paginator.page(page)
+        searchPage = paginator.page(page)
     except PageNotAnInteger:
-        searchAll = paginator.page(1)
+        searchPage = paginator.page(1)
     except EmptyPage:
-        searchAll = paginator.page(paginator.num_pages)
+        searchPage = paginator.page(paginator.num_pages)
 
-    # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
+    index = paginator.page_range.index(searchPage.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
 
     if searchCount == 0:
         msg = "검색 결과가 없습니다."
-        return render_to_response('04_knowledge05_search05list.html', {'searchStr':searchStr, 'username':username,
-        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
-    return render_to_response('04_knowledge05_search05list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
-
-def board05_complete(request):
-    try:
-        username = request.session["username"]
-    except KeyError:
-        username = None
-
-    return render(request, '04_knowledge05_complete.html', {'username': username, })
+        return render(request, '04_knowledge05_search05list.html', {'username': username, 'searchStr':searchStr, 'searchCount': searchCount, 'msg': msg, })
+    return render(request, '04_knowledge05_search05list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, 'searchCount': searchCount, 'page_range': page_range, })
 
 def board05_different(request):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    total = Contacts05.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge05_different.html', {'username': username, 'page': page, })
+    return render(request, '04_knowledge05_different.html', {'username': username, })
 
 def board05_deleteconfirm(request, pk):
+
     try:
         username = request.session["username"]
     except KeyError:
         username = None
 
-    pk = pk
+    user = User.objects.filter(username=username).get()
+    delete05 = Contacts05.objects.get(id=pk)
 
-    if username:
-        user = User.objects.filter(username=username).get()
-        delete05 = Contacts05.objects.get(id=pk)
-
-        if delete05.user_id == user.id :
-            total = Contacts05.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge05_deleteconfirm.html', {'page': page, 'username': username, 'pk': pk, })
-        else:
-            total = Contacts05.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge05_different.html', {'username': username, 'page': page, 'pk': pk, })
-
-    total = Contacts05.objects.all().count()
-    page = total // 20
-    page = page + 1
-
-    return render(request, '04_knowledge05_mustlogin.html', {'username': username, 'pk':pk, 'page': page, })
+    if delete05.user_id == user.id :
+        return render(request, '04_knowledge05_deleteconfirm.html', {'username': username, 'pk': pk, })
+    else:
+        return render(request, '04_knowledge05_different.html', {'username': username, 'pk': pk, })
 
 def knowledge040601(request):
     try:
@@ -1067,10 +847,8 @@ def knowledge040601(request):
     except KeyError:
         username = None
 
-    customer_list = Contacts06q.objects.all().order_by('-created_at')
-
-    paginator = Paginator(customer_list, 20)
-
+    contact_list = Contacts06q.objects.all().order_by('-created_at')
+    paginator = Paginator(contact_list, 20)
     page = request.GET.get('page', 1)
     try:
         contacts = paginator.page(page)
@@ -1079,7 +857,13 @@ def knowledge040601(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
 
-    return render(request, '04_knowledge06.html', {'contacts': contacts, 'username': username })
+    index = paginator.page_range.index(contacts.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    return render(request, '04_knowledge06.html', {'contacts': contacts, 'username': username, 'page': page, 'page_range': page_range, })
 
 @csrf_exempt
 
@@ -1089,27 +873,19 @@ def board06_write(request):
         username = request.session["username"]
     except KeyError:
         username = None
-    total = Contacts06q.objects.all().count()
-    page = total // 20
-    page = page + 1
 
+    form = Contacts06qForm()
     if request.method == 'POST':
-        form = Contacts06qForm(request.POST)
-        if form.is_valid():
-            form.save()
-            new = Contacts06q.objects.last()
-            pk = new.id
-
-            total = Contacts06q.objects.all().count()
-            page = total // 20
-            page = page + 1
-
-            return render(request, '04_knowledge06_complete.html', {'pk': pk, 'username': username, 'page': page, })
-
-    else:
-        form = Contacts06qForm()
-
-    return render(request, '04_knowledge06_write.html', {'form':form, 'username': username, 'page': page, })
+        contacts = form.save(commit=False)
+        contacts.writer = request.POST['writer']
+        contacts.password = request.POST['password']
+        contacts.title = request.POST['title']
+        contacts.content = request.POST['content']
+        contacts.save()
+        new = Contacts06q.objects.last()
+        pk = new.id
+        return redirect(board06_detail, pk=pk)
+    return render(request, '04_knowledge06_write.html', {'form':form, 'username': username, })
 
 def board06_detail(request, pk):
 
@@ -1124,7 +900,6 @@ def board06_detail(request, pk):
         prev = specific_board01.get_previous_by_created_at()
     except :
         prev = None
-
     try:
         next = specific_board01.get_next_by_created_at()
     except :
@@ -1133,8 +908,8 @@ def board06_detail(request, pk):
     r_form = Contacts06a.objects.filter(contacts06q_id=pk).last()
 
     total = Contacts06q.objects.all().count()
-    page = total // 20
-    page = page + 1
+    c_count = Contacts06q.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
     pk = pk
 
     Contacts06q.objects.filter(id=pk).update(hits = specific_board01.hits+1)
@@ -1158,7 +933,6 @@ def board06_editconfirm(request, pk):
         password = None
 
     pw = specific.password
-
     if password :
         if password == pw :
             return render(request, '04_knowledge06_edit.html', {'username': username, 'pk': pk, 'specific': specific, })
@@ -1177,10 +951,7 @@ def board06_edit(request, pk):
         username = None
 
     oldboard01 = Contacts06q.objects.get(id=pk)
-    pk = pk
-
-    return render(request, '04_knowledge06_edit.html', {'username': username, 'oldboard01': oldboard01,
-                                                        'pk': pk, })
+    return render(request, '04_knowledge06_edit.html', {'username': username, 'oldboard01': oldboard01, 'pk': pk, })
 
 def board06_edit_db(request, pk):
 
@@ -1189,12 +960,11 @@ def board06_edit_db(request, pk):
     except KeyError:
         username = None
 
-        content = request.POST['content']
-        title = request.POST['title']
+    content = request.POST['content']
+    title = request.POST['title']
+    Contacts06q.objects.filter(id=pk).update(content=content, title=title)
 
-        Contacts06q.objects.filter(id=pk).update(content=content, title=title)
-
-        return render(request, '04_knowledge06_edit_db.html', {'pk': pk, 'username': username, })
+    return render(request, '04_knowledge06_edit_db.html', {'pk': pk, 'username': username, })
 
 def board06_delete(request, pk):
 
@@ -1206,8 +976,8 @@ def board06_delete(request, pk):
     delete06 = Contacts06q.objects.get(id=pk)
     delete06.delete()
     total = Contacts06q.objects.all().count()
-    page = total // 20
-    page = page + 1
+    c_count = Contacts06q.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
 
     return render(request, '04_knowledge06_delete.html', {'page': page, 'username': username, })
 
@@ -1222,31 +992,24 @@ def search06list(request):
     searchAll = Contacts06q.objects.filter(title__contains=searchStr).all().order_by('-created_at')
 
     paginator = Paginator(searchAll, 20)
-
     page = request.GET.get('page', 1)
     try:
-        searchAll = paginator.page(page)
+        searchPage = paginator.page(page)
     except PageNotAnInteger:
-        searchAll = paginator.page(1)
+        searchPage = paginator.page(1)
     except EmptyPage:
-        searchAll = paginator.page(paginator.num_pages)
+        searchPage = paginator.page(paginator.num_pages)
 
-    # board_list = Contacts.objects.raw('select * from Contacts where content like %s', searchStr)
+    index = paginator.page_range.index(searchPage.number)
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = paginator.page_range[start_index:end_index]
 
     if searchCount == 0:
         msg = "검색 결과가 없습니다."
-        return render_to_response('04_knowledge06_search06list.html', {'searchStr':searchStr, 'username':username,
-        'searchCount': searchCount, 'searchAll': searchAll, 'msg': msg, })
-    return render_to_response('04_knowledge06_search06list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, })
-
-
-def board06_complete(request):
-    try:
-        username = request.session["username"]
-    except KeyError:
-        username = None
-
-    return render(request, '04_knowledge06_complete.html', {'username': username, })
+        return render(request, '04_knowledge06_search06list.html', {'username': username, 'searchStr':searchStr, 'searchCount': searchCount, 'msg': msg, })
+    return render(request, '04_knowledge06_search06list.html', {'searchAll': searchAll, 'searchStr':searchStr, 'username':username, 'searchCount': searchCount, 'page_range': page_range, })
 
 def board06_different(request):
     try:
@@ -1255,8 +1018,8 @@ def board06_different(request):
         username = None
 
     total = Contacts06q.objects.all().count()
-    page = total // 20
-    page = page + 1
+    c_count = Contacts06q.objects.order_by('created_at')[:int(pk)].count()
+    page = (total - c_count) // 20 + 1
 
     return render(request, '04_knowledge06_different.html', {'username': username, 'page': page, })
 
@@ -1267,10 +1030,6 @@ def board06_deleteconfirm1(request, pk):
         username = request.session["username"]
     except KeyError:
         username = None
-
-    total = Contacts06q.objects.all().count()
-    page = total // 20
-    page = page + 1
 
     specific = Contacts06q.objects.filter(id=pk).get()
     pk = pk
@@ -1283,11 +1042,9 @@ def board06_deleteconfirm1(request, pk):
 
     if password :
         if password == pw :
-            return render(request, '04_knowledge06_deleteconfirm2.html', {'username': username, 'pk': pk,
-                                                                          'specific': specific, 'page': page, })
+            return render(request, '04_knowledge06_deleteconfirm2.html', {'username': username, 'pk': pk, 'specific': specific, })
         else :
-            return render(request, '04_knowledge06_different.html', {'username': username, 'pk': pk, 'page': page, })
-
+            return render(request, '04_knowledge06_different.html', {'username': username, 'pk': pk, })
     return render(request, '04_knowledge06_deleteconfirm1.html', {'username': username, 'pk': pk, 'specific': specific, })
 
 def board06_deleteconfirm2(request, pk):
@@ -1307,34 +1064,17 @@ def board06_answer(request, pk):
     except KeyError:
         username = None
     pk = pk
-    form_class = Contacts06aForm
-    form = form_class(request.POST or None)
+    form = Contacts06aForm()
     if request.method == 'POST':
-        if form.is_valid():
-            r_form = form.save(commit=False)
-            write = User.objects.filter(username=username).get()
-            specific_board01 = Contacts06q.objects.filter(pk=pk).get()
-            r_form.user_id = write.pk
-            r_form.contacts06q_id = specific_board01.pk
-            r_form.save()
+        r_form = form.save(commit=False)
+        write = User.objects.filter(username=username).get()
+        specific_board01 = Contacts06q.objects.filter(pk=pk).get()
+        r_form.user_id = write.pk
+        r_form.contacts06q_id = specific_board01.pk
+        r_form.reply = request.POST['reply']
+        r_form.save()
 
-            try:
-                prev = specific_board01.get_previous_by_created_at()
-            except:
-                prev = None
-
-            try:
-                next = specific_board01.get_next_by_created_at()
-            except:
-                next = None
-
-            return render(request, '04_knowledge06_detail.html', {'pk': pk, 'username': username, 'r_form': r_form,
-                                                                  'specific_board01': specific_board01, 'prev': prev,
-                                                                  'next': next, })
-
-        else:
-            form = Contacts06aForm()
-
+        return redirect(board06_detail, pk=pk)
     return render(request, '04_knowledge06_answer.html', {'form': form, 'username': username, })
 
 @csrf_exempt
@@ -1346,36 +1086,19 @@ def board06_answeredit(request, pk):
     except KeyError:
         username = None
 
-    form_class = Contacts06aForm
-    form = form_class(request.POST or None)
+    form = Contacts06aForm()
     pk = pk
     specific = Contacts06a.objects.filter(contacts06q_id=pk).last()
 
     if request.method == 'POST':
-        if form.is_valid():
-            reply = request.POST['reply']
-            question = Contacts06q.objects.filter(id=pk).get()
+        reply = request.POST['reply']
+        question = Contacts06q.objects.filter(id=pk).get()
+        Contacts06a.objects.filter(contacts06q_id=question.id).update(reply=reply)
 
-            Contacts06a.objects.filter(contacts06q_id=question.id).update(reply=reply)
+        specific_board01 = Contacts06q.objects.filter(pk=pk).get()
+        r_form = Contacts06a.objects.filter(contacts06q_id=question.id).last()
 
-            specific_board01 = Contacts06q.objects.filter(pk=pk).get()
-            r_form = Contacts06a.objects.filter(contacts06q_id=question.id).last()
-
-            try:
-                prev = specific_board01.get_previous_by_created_at()
-            except:
-                prev = None
-
-            try:
-                next = specific_board01.get_next_by_created_at()
-            except:
-                next = None
-
-            return render(request, '04_knowledge06_detail.html', {'pk': pk, 'username': username, 'r_form': r_form,
-                                                                  'specific': specific, 'prev': prev, 'next': next, })
-
-        else:
-            form = Contacts06aForm()
+        return redirect(board06_detail, pk=pk)
     return render(request, '04_knowledge06_answeredit.html', {'username': username, 'pk': pk,
                                                               'form': form, 'specific': specific, })
 
@@ -1395,12 +1118,8 @@ def board06_answerdelete(request, pk):
     except KeyError:
         username = None
 
+    pk = pk
     delete = Contacts06a.objects.filter(contacts06q_id=pk).all()
     delete.delete()
-    total = Contacts06q.objects.all().count()
-    page = total // 20
-    page = page + 1
 
-    pk = pk
-
-    return render(request, '04_knowledge06_answerdelete.html', {'page': page, 'username': username, 'pk': pk, })
+    return render(request, '04_knowledge06_answerdelete.html', {'pk' : pk, 'username': username, })

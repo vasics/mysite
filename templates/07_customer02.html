@@ -39,9 +39,9 @@
                  <div class="pagination">
                     {% if customer.has_other_pages %}
                     {% if customer.has_previous %}
-                     <a href="?page={{ customer.previous_page_number }}">&laquo;</a>
+                     <a href="?page={{ customer.previous_page_number }}">이전페이지</a>
                     {% else %}
-                     &laquo;
+                     이전페이지
                     {% endif %}
                     {% for i in customer.paginator.page_range %}
                     {% if customer.number == i %}
@@ -51,9 +51,9 @@
                     {% endif %}
                     {% endfor %}
                     {% if customer.has_next %}
-                    <a href="?page={{ customer.next_page_number }}">&raquo;</a>
+                    <a href="?page={{ customer.next_page_number }}">다음페이지</a>
                     {% else %}
-                        &raquo;
+                        다음페이지
                     {% endif %}
                   {% endif %}
                  </div>

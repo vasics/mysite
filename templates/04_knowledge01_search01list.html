@@ -27,7 +27,7 @@
                         <td id="fatb9-1-4">조회수</td>
                     </tr>
                       <tbody>
-                        {% for search in searchAll %}
+                        {% for search in searchPage %}
                     <tr>
                     <td>{{ search.id }}</td>
                     <td><a href = "{{ search.id }}">{{ search.title }}</a></td>
@@ -39,24 +39,22 @@
                 </table>
                 {{ msg }}
                 <div class="pagination">
-                    {% if searchAll.has_other_pages %}
-                    {% if searchAll.has_previous %}
-                        <a href="?page={{ searchAll.previous_page_number }}">&laquo;</a>
-                    {% else %}
-                        &laquo;
-                    {% endif %}
-                    {% for i in searchAll.paginator.page_range %}
-                    {% if searchAll.number == i %}
-                    <b>{{ i }}</b>
-                    {% else %}
-                        <a href="?page={{ i }}">{{ i }}</a>
-                    {% endif %}
-                    {% endfor %}
-                    {% if searchAll.has_next %}
-                        <a href="?page={{ searchAll.next_page_number }}">&raquo;</a>
-                    {% else %}
-                        &raquo;
-                    {% endif %}
+                    {% if searchPage.has_other_pages %}
+                        {% if searchPage.has_previous %}
+                            <a href="?page={{ searchPage.previous_page_number }}">이전페이지</a>
+                        {% else %}
+                        {% endif %}
+                        {% for pg in page_range %}
+                            {% if searchPage.number == pg %}
+                                {{ pg }}
+                            {% else %}
+                                <a href="?page={{ pg }}">{{ pg }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        {% if searchPage.has_next %}
+                            <a href="?page={{ searchPage.next_page_number }}">다음페이지</a>
+                        {% else %}
+                        {% endif %}
                     {% endif %}
                 </div>
                 <div>

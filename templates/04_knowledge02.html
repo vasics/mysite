@@ -40,9 +40,9 @@
           <div class="pagination">
               {% if contacts.has_other_pages %}
                   {% if contacts.has_previous %}
-                      <a href="?page={{ contacts.previous_page_number }}">&laquo;</a>
+                      <a href="?page={{ contacts.previous_page_number }}">이전페이지</a>
                   {% else %}
-                      &laquo;
+                      이전페이지
                   {% endif %}
                   {% for i in contacts.paginator.page_range %}
                       {% if contacts.number == i %}
@@ -52,9 +52,9 @@
                       {% endif %}
                   {% endfor %}
                   {% if contacts.has_next %}
-                      <a href="?page={{ contacts.next_page_number }}">&raquo;</a>
+                      <a href="?page={{ contacts.next_page_number }}">다음페이지</a>
                   {% else %}
-                      &raquo;
+                      다음페이지
                   {% endif %}
               {% endif %}
           </div>

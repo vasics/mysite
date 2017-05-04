@@ -43,27 +43,29 @@
                             <td>{{ custom.created_at }}</td>
                             <td>{{ custom.hits }}</td>
                         </tr>
-                        <tr class="faqs-contents">
-                            <td class="qna_reply" colspan="4">{{ custom.content }}
+                          <tr class="faqs-contents">
+                            <td class="qna_reply" colspan="4">{{ custom.answer }}
+                                {% if username %}
                                 <table class="qna_reply_box">
                                     <td>
-                                        <a href=""><input type="button" value="작성"></a>
+                                        <a href="{{ custom.id }}/answer"><input type="button" value="작성"></a>
                                     </td>
                                     <td>
-                                        <a href=""><input type="button" value="삭제"></a>
+                                        <a href="{{ custom.id }}/delete"><input type="button" value="삭제"></a>
                                     </td>
                                 </table>
+                                {% endif %}
                             </td>
                         </tr>
-                        {% endfor %}
+                       {% endfor %}
                     </tbody>
                 </table>
                 <div class="pagination">
                     {% if customer.has_other_pages %}
                     {% if customer.has_previous %}
-                        <a href="?page={{ customer.previous_page_number }}">&laquo;</a>
+                        <a href="?page={{ customer.previous_page_number }}">이전페이지</a>
                     {% else %}
-                        &laquo;
+                        이전페이지
                     {% endif %}
                     {% for i in customer.paginator.page_range %}
                     {% if customer.number == i %}
@@ -73,9 +75,9 @@
                     {% endif %}
                     {% endfor %}
                     {% if customer.has_next %}
-                        <a href="?page={{ customer.next_page_number }}">&raquo;</a>
+                        <a href="?page={{ customer.next_page_number }}">다음페이지</a>
                     {% else %}
-                        &raquo;
+                        다음페이지
                     {% endif %}
                     {% endif %}
                 </div>
@@ -94,7 +96,7 @@
                             </td>
                             <td class="question_box">
                                 <div>
-                                    <a href="{% url 'customer03_write' %}">질문올리기</a>
+                                    <a href="{% url 'customer04_write' %}">질문올리기</a>
                                 </div>
                             </td>
                         <tbody>

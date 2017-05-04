@@ -4,7 +4,7 @@
         <div class="basic_cont">
             <div id="left_aside">
                 <div id="left_nav">
-                    
+
                 </div>
                 <div id="left-nav-bottom">
                     <div><a href="{% url 'knowledge040101' %}">1. 은행</a></div>
@@ -18,15 +18,14 @@
             <div id="right_aside">
                 <div class="complete_box">
                     삭제되었습니다.
-                </div>   
+                </div>
                 <div>
-                    <div class="list_box">
-                        <a href="/knowledge/06/{{ pk }}">
-                        확인</a>
-                    </div>            
+                  <div class="list_box">
+                      <a href="{% url 'board06_detail' pk %}">확인</a>
+                  </div>
                 </div>
            </div>
-              
+
         </div>
 
     {% endblock content %}

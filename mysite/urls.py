@@ -25,16 +25,16 @@ from finance.views import finance030305, finance030306, finance030401, finance03
 from knowledge.views import knowledge040101, board01_detail, board01_edit, board01_delete, board01_write, board01_edit_db
 from knowledge.views import knowledge040201, knowledge040301, knowledge040401, knowledge040501, knowledge040601
 from knowledge.views import board02_detail, board02_edit, board02_delete, board02_write, board02_edit_db
-from knowledge.views import search01list, board01_complete, board01_different, board01_deleteconfirm
-from knowledge.views import search02list, board02_complete, board02_different, board02_deleteconfirm
+from knowledge.views import search01list, board01_different, board01_deleteconfirm
+from knowledge.views import search02list, board02_different, board02_deleteconfirm, board02_edit_db
 from knowledge.views import board03_detail, board03_edit, board03_delete, board03_write, board03_edit_db
-from knowledge.views import search03list, board03_complete, board03_different, board03_deleteconfirm
+from knowledge.views import search03list, board03_different, board03_deleteconfirm, board03_edit_db
 from knowledge.views import board04_detail, board04_edit, board04_delete, board04_write, board04_edit_db
-from knowledge.views import search04list, board04_complete, board04_different, board04_deleteconfirm
+from knowledge.views import search04list, board04_different, board04_deleteconfirm, board04_edit_db
 from knowledge.views import board05_detail, board05_edit, board05_delete, board05_write, board05_edit_db
-from knowledge.views import search05list, board05_complete, board05_different, board05_deleteconfirm
-from knowledge.views import board06_detail, board06_edit, board06_delete, board06_write, board06_edit_db, board06_deleteconfirm2
-from knowledge.views import search06list, board06_complete, board06_different, board06_deleteconfirm1, board06_editconfirm
+from knowledge.views import search05list, board05_different, board05_deleteconfirm, board05_edit_db
+from knowledge.views import board06_detail, board06_edit, board06_delete, board06_write, board06_deleteconfirm2
+from knowledge.views import search06list, board06_different, board06_deleteconfirm1, board06_editconfirm, board06_edit_db
 from knowledge.views import board06_answer, board06_answeredit, board06_answerdelete, board06_answerdeletecon
 
 from counsel.views import counsel050101, counsel050201, counsel050202
@@ -43,12 +43,12 @@ from counsel.views import c01_delete, c01_delete_db, counsel02save
 
 from customer.views import customer070101, customer070201, customer070301, customer070401
 from customer.views import customer01_detail, customer01_edit, customer01_delete, customer01_write, customer01_edit_db
-from customer.views import customer01_search01list, customer01_complete, customer01_different, customer01_deleteconfirm
+from customer.views import customer01_search01list, customer01_different, customer01_deleteconfirm
 from customer.views import customer02_detail, customer02_edit, customer02_delete, customer02_write, customer02_edit_db
-from customer.views import customer02_search02list, customer02_complete, customer02_different, customer02_deleteconfirm
+from customer.views import customer02_search02list, customer02_different, customer02_deleteconfirm
 from customer.views import customer03_detail, customer03_edit, customer03_delete, customer03_write, customer03_edit_db
-from customer.views import customer03_search03list, customer03_complete, customer03_different, customer03_deleteconfirm
-from customer.views import customer04_write
+from customer.views import customer03_search03list, customer03_different, customer03_deleteconfirm
+from customer.views import customer04_write, customer04_answer, customer04_delete, customer04_delete_db
 
 from mall.views import mall0601
 from english.views import english
@@ -93,7 +93,6 @@ urlpatterns = [
     url(r'^knowledge/01/(?P<pk>\d+)/board01_delete/$', board01_delete, name='board01_delete'),
     url(r'^knowledge/01/(?P<pk>\d+)/board01_edit_db/$', board01_edit_db, name='board01_edit_db'),
     url(r'^knowledge/01/search01list', search01list, name='search01list'),
-    url(r'^knowledge/01/complete/$', board01_complete, name='board01_complete'),
     url(r'^knowledge/01/different/$', board01_different, name='board01_different'),
     url(r'^knowledge/01/(?P<pk>\d+)/board01_deleteconfirm/$', board01_deleteconfirm, name='board01_deleteconfirm'),
 
@@ -104,7 +103,6 @@ urlpatterns = [
     url(r'^knowledge/02/(?P<pk>\d+)/board02_delete/$', board02_delete, name='board02_delete'),
     url(r'^knowledge/02/(?P<pk>\d+)/board02_edit_db/$', board02_edit_db, name='board02_edit_db'),
     url(r'^knowledge/02/search02list', search02list, name='search02list'),
-    url(r'^knowledge/02/complete/$', board02_complete, name='board02_complete'),
     url(r'^knowledge/02/different/$', board02_different, name='board02_different'),
     url(r'^knowledge/02/(?P<pk>\d+)/board02_deleteconfirm/$', board02_deleteconfirm, name='board02_deleteconfirm'),
 
@@ -115,7 +113,6 @@ urlpatterns = [
     url(r'^knowledge/03/(?P<pk>\d+)/board03_delete/$', board03_delete, name='board03_delete'),
     url(r'^knowledge/03/(?P<pk>\d+)/board03_edit_db/$', board03_edit_db, name='board03_edit_db'),
     url(r'^knowledge/03/search03list', search03list, name='search03list'),
-    url(r'^knowledge/03/complete/$', board03_complete, name='board03_complete'),
     url(r'^knowledge/03/different/$', board03_different, name='board03_different'),
     url(r'^knowledge/03/(?P<pk>\d+)/board03_deleteconfirm/$', board03_deleteconfirm, name='board03_deleteconfirm'),
 
@@ -126,7 +123,6 @@ urlpatterns = [
     url(r'^knowledge/04/(?P<pk>\d+)/board04_delete/$', board04_delete, name='board04_delete'),
     url(r'^knowledge/04/(?P<pk>\d+)/board04_edit_db/$', board04_edit_db, name='board04_edit_db'),
     url(r'^knowledge/04/search04list', search04list, name='search04list'),
-    url(r'^knowledge/04/complete/$', board04_complete, name='board04_complete'),
     url(r'^knowledge/04/different/$', board04_different, name='board04_different'),
     url(r'^knowledge/04/(?P<pk>\d+)/board04_deleteconfirm/$', board04_deleteconfirm, name='board04_deleteconfirm'),
 
@@ -137,7 +133,6 @@ urlpatterns = [
     url(r'^knowledge/05/(?P<pk>\d+)/board05_delete/$', board05_delete, name='board05_delete'),
     url(r'^knowledge/05/(?P<pk>\d+)/board05_edit_db/$', board05_edit_db, name='board05_edit_db'),
     url(r'^knowledge/05/search05list', search05list, name='search05list'),
-    url(r'^knowledge/05/complete/$', board05_complete, name='board05_complete'),
     url(r'^knowledge/05/different/$', board05_different, name='board05_different'),
     url(r'^knowledge/05/(?P<pk>\d+)/board05_deleteconfirm/$', board05_deleteconfirm, name='board05_deleteconfirm'),
 
@@ -146,14 +141,13 @@ urlpatterns = [
     url(r'^knowledge/06/board06_write/$', board06_write, name='board06_write'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_edit/$', board06_edit, name='board06_edit'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_delete/$', board06_delete, name='board06_delete'),
-    url(r'^knowledge/06/(?P<pk>\d+)/board06_edit_db/$', board06_edit_db, name='board06_edit_db'),
     url(r'^knowledge/06/search06list', search06list, name='search06list'),
-    url(r'^knowledge/06/complete/$', board06_complete, name='board06_complete'),
     url(r'^knowledge/06/different/$', board06_different, name='board06_different'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_deleteconfirm1/$', board06_deleteconfirm1, name='board06_deleteconfirm1'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_editconfirm/$', board06_editconfirm, name='board06_editconfirm'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_deleteconfirm2/$', board06_deleteconfirm2, name='board06_deleteconfirm2'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_answer/$', board06_answer, name='board06_answer'),
+    url(r'^knowledge/06/(?P<pk>\d+)/board06_edit_db/$', board06_edit_db, name='board06_edit_db'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_answeredit/$', board06_answeredit, name='board06_answeredit'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_answerdeletecon/$', board06_answerdeletecon, name='board06_answerdeletecon'),
     url(r'^knowledge/06/(?P<pk>\d+)/board06_answerdelete/$', board06_answerdelete, name='board06_answerdelete'),
@@ -177,14 +171,13 @@ urlpatterns = [
 
     url(r'^customer/01/$', customer070101, name='customer070101'),
     url(r'^customer/01/(?P<pk>\d+)/$', customer01_detail, name='customer01_detail'),
-    url(r'^customer/01/customer01_write/$', customer01_write, name='customer01_write'),
-    url(r'^customer/01/(?P<pk>\d+)/customer01_edit/$', customer01_edit, name='customer01_edit'),
-    url(r'^customer/01/(?P<pk>\d+)/customer01_delete/$', customer01_delete, name='customer01_delete'),
-    url(r'^customer/01/(?P<pk>\d+)/customer01_edit_db/$', customer01_edit_db, name='customer01_edit_db'),
+    url(r'^customer/01/write/$', customer01_write, name='customer01_write'),
+    url(r'^customer/01/(?P<pk>\d+)/edit/$', customer01_edit, name='customer01_edit'),
+    url(r'^customer/01/(?P<pk>\d+)/delete/$', customer01_delete, name='customer01_delete'),
+    url(r'^customer/01/(?P<pk>\d+)/edit_db/$', customer01_edit_db, name='customer01_edit_db'),
     url(r'^customer/01/search01list', customer01_search01list, name='customer01_search01list'),
-    url(r'^customer/01/complete/$', customer01_complete, name='customer01_complete'),
     url(r'^customer/01/different/$', customer01_different, name='customer01_different'),
-    url(r'^customer/01/(?P<pk>\d+)/customer01_deleteconfirm/$', customer01_deleteconfirm, name='customer01_deleteconfirm'),
+    url(r'^customer/01/(?P<pk>\d+)/deleteconfirm/$', customer01_deleteconfirm, name='customer01_deleteconfirm'),
 
     url(r'^customer/02/$', customer070201, name='customer070201'),
     url(r'^customer/02/(?P<pk>\d+)/$', customer02_detail, name='customer02_detail'),
@@ -193,7 +186,6 @@ urlpatterns = [
     url(r'^customer/02/(?P<pk>\d+)/customer02_delete/$', customer02_delete, name='customer02_delete'),
     url(r'^customer/02/(?P<pk>\d+)/customer02_edit_db/$', customer02_edit_db, name='customer02_edit_db'),
     url(r'^customer/02/search02list', customer02_search02list, name='customer02_search02list'),
-    url(r'^customer/02/complete/$', customer02_complete, name='customer02_complete'),
     url(r'^customer/02/different/$', customer02_different, name='customer02_different'),
     url(r'^customer/02/(?P<pk>\d+)/customer02_deleteconfirm/$', customer02_deleteconfirm, name='customer02_deleteconfirm'),
 
@@ -204,12 +196,14 @@ urlpatterns = [
     url(r'^customer/03/(?P<pk>\d+)/customer03_delete/$', customer03_delete, name='customer03_delete'),
     url(r'^customer/03/(?P<pk>\d+)/customer03_edit_db/$', customer03_edit_db, name='customer03_edit_db'),
     url(r'^customer/03/search03list', customer03_search03list, name='customer03_search03list'),
-    url(r'^customer/03/complete/$', customer03_complete, name='customer03_complete'),
     url(r'^customer/03/different/$', customer03_different, name='customer03_different'),
     url(r'^customer/03/(?P<pk>\d+)/customer03_deleteconfirm/$', customer03_deleteconfirm, name='customer03_deleteconfirm'),
 
     url(r'^customer/04/$', customer070401, name='customer070401'),
     url(r'^customer/04/customer04_write/$', customer04_write, name='customer04_write'),
+    url(r'^customer/04/(?P<pk>\d+)/answer/$', customer04_answer, name='customer04_answer'),
+    url(r'^customer/04/(?P<pk>\d+)/delete/$', customer04_delete, name='customer04_delete'),
+    url(r'^customer/04/(?P<pk>\d+)/delete_db/$', customer04_delete_db, name='customer04_delete_db'),
 
     url(r'^english/$', english, name='english'),
     url(r'^mypage/$', mypage, name='mypage'),

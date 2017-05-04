@@ -27,12 +27,28 @@
         <form method="POST" action="">
             {% csrf_token %}
             <table class="write_detail">
+              <tr class="wd_writer">
+                  <td class="w25">
+                      작성자
+                  </td>
+                  <td>
+                      <input type="text" name="writer"  maxlength="20" required>
+                  </td>
+              </tr>
                 <tr class="wd_title">
                     <td class="w25">
+                        제목
+                    </td>
+                    <td>
+                        <input type="text" name="title" required maxlength="50">
+                    </td>
+                </tr>
+                <tr class="wd_contents">
+                    <td class="center_center">
                         질문내용
                     </td>
                     <td>
-                        <input type="text" name="title"  maxlength="50">
+                        <textarea type="text" required name="content"></textarea>
                     </td>
                 </tr>
                 <tr class="wd_password">
